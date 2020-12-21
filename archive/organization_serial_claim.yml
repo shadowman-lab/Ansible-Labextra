@@ -1,0 +1,28 @@
+---
+- name: Claim Meraki Devices by Serial for an Organization
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+  - name: Query the Organization for the ID
+    meraki_network:
+      state: query
+      org_name: "{{ org_name }}"
+      net_name: "{{ net_name }}"
+    register: network
+  
+  - name: Make API call to Claim Serial
+    uri:
+      url: https://{{ api_address }}/api/v0/organizations/{{ network.data.organization_id }}/claim
+      method: POST
+      body_format: json
+      body: {"serials":[ '{{ order_serial }}' ]}
+      headers:
+        X-Cisco-Meraki-API-Key: "{{ auth_key }}"
+    register: result
+    delegate_to: localhost
+
+  - name: Print Results
+    debug:
+      var: result

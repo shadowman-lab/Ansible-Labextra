@@ -1,0 +1,23 @@
+- name: Send an e-mail
+  hosts: all
+  gather_facts: false
+  connection: local
+
+  collections:
+    - community.general
+    
+  vars:
+    to_email: "{{ to_emails.split(',') }}"
+
+  tasks: 
+  - name: Send Web Link via E-mail
+    mail:
+      host: "{{ EMAIL_HOST }}"
+      username: "{{ EMAIL_USERNAME }}"
+      password: "{{ EMAIL_PASSWORD }}"
+      port: "{{ EMAIL_PORT }}"
+      subject: "{{ email_subject }}"
+      body: "{{ email_body }}"
+      from: tower@shadowman.dev
+      to: "{{ to_email }}"
+    delegate_to: localhost  

@@ -1,0 +1,10 @@
+---
+- name: Restart ElasticSearch
+  hosts: all
+
+  tasks:
+
+  - name: restart elasticsearch service
+    service:
+      name: elasticsearch
+      state: restarted

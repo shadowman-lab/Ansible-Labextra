@@ -1,0 +1,36 @@
+---
+
+- name: Meraki Playbook to create a VLAN
+  hosts: localhost
+  gather_facts: false
+  
+  vars: 
+    new_vlan_id: 700
+    subnet_name: JT_Test_Subnet
+    subnet_cidr: 10.10.220.0/24
+    gateway_ip: 10.10.220.1
+  
+  tasks:
+    - name: Query all VLANs in a network.
+      meraki_vlan:
+        host: "{{ api_address }}"
+        org_name: "{{ org_name }}"
+        net_name: "{{ net_name }}"
+        state: query
+      register: VLAN
+      delegate_to: localhost 
+      
+    - name: Display VLANs
+      debug:
+        var: VLAN
+      
+    - name: Create a VLAN.
+      meraki_vlan:
+        org_name: "{{ org_name }}"
+        net_name: "{{ net_name }}"
+        state: present
+        vlan_id: "{{ new_vlan_id }}"
+        name: "{{ subnet_name }}"
+        subnet: "{{ subnet_cidr }}"
+        appliance_ip: "{{ gateway_ip }}"
+      delegate_to: localhost

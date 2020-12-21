@@ -1,0 +1,12 @@
+- name: Extract data from Tower
+  hosts: all
+  gather_facts: false
+  connection: local
+
+  collections:
+    - ansible.tower
+    
+  tasks: 
+  - name: Extract Tower data
+    tower_export:
+      all: True

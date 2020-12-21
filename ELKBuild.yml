@@ -1,0 +1,169 @@
+---
+- name: Setup ELK Stack
+  hosts: all
+  vars:
+    elk_cluster_name: elk-demo
+
+  collections:
+    - ansible.posix
+
+  tasks:
+
+  - name: download and install elastic GPG key
+    rpm_key:
+      state=present
+      key=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+  - name: create repo for elastic packages
+    yum_repository:
+      name: elasticsearch
+      description: Elastic 7.x Repo
+      baseurl: https://artifacts.elastic.co/packages/7.x/yum
+      gpgcheck: yes
+
+
+  - name: Open firewall ports
+    shell : | 
+      systemctl enable firewalld
+      systemctl start firewalld
+      firewall-cmd --add-port=5055/tcp
+      firewall-cmd --permanent --add-port=5055/tcp
+      firewall-cmd --add-port=9200/tcp
+      firewall-cmd --permanent --add-port=9200/tcp
+      firewall-cmd --add-service=https
+      firewall-cmd --permanent --add-service=https
+      firewall-cmd --add-masquerade
+      firewall-cmd --permanent --add-masquerade
+      firewall-cmd --permanent --direct --add-rule ipv4 nat OUTPUT 1 -p tcp -d 127.0.0.1 --dport 443 -j REDIRECT --to-ports 9200
+      firewall-cmd --permanent --direct --add-rule ipv6 nat OUTPUT 1 -p tcp -d 127.0.0.1 --dport 443 -j REDIRECT --to-ports 9200
+      firewall-cmd --permanent --direct --add-rule ipv4 nat OUTPUT 1 -p tcp -d 127.0.0.1 --dport 4443 -j REDIRECT --to-ports 9200
+      firewall-cmd --permanent --direct --add-rule ipv6 nat OUTPUT 1 -p tcp -d 127.0.0.1 --dport 4443 -j REDIRECT --to-ports 9200
+      firewall-cmd --permanent --direct --add-rule ipv4 nat PREROUTING 1 -p tcp -d 10.51.222.6 --dport 443 -j REDIRECT --to-ports 9200
+      firewall-cmd --permanent --direct --add-rule ipv6 nat PREROUTING 1 -p tcp -d 10.51.222.6 --dport 443 -j REDIRECT --to-ports 9200
+      firewall-cmd --runtime-to-permanent
+      systemctl restart firewalld
+
+  - name: install OpenJDK 1.8.0
+    yum:
+      name: java-1.8.0-openjdk
+      state: present
+
+  - name: install elasticsearch
+    yum:
+      name: elasticsearch
+      state: present
+
+  - name: place elasticsearch config template
+    template:
+      src: templates/elasticsearch.yml.j2
+      dest: /etc/elasticsearch/elasticsearch.yml
+
+  - name: set jvm minimum memory to 50%
+    lineinfile:
+      dest: /etc/elasticsearch/jvm.options
+      regexp: '^(.*)Xms(\d+)g(.*)$'
+      line: '\1Xms{{ (ansible_memtotal_mb*0.5)|int|abs }}m\3'
+      backrefs: yes
+  
+  - name: set jvm maximum memory to 50%
+    lineinfile:
+      dest: /etc/elasticsearch/jvm.options
+      regexp: '^(.*)Xmx(\d+)g(.*)$'
+      line: '\1Xmx{{ (ansible_memtotal_mb*0.5)|int|abs }}m\3'
+      backrefs: yes
+
+  - name: set vm.max_map_count to 262144
+    sysctl:
+      name: vm.max_map_count
+      value: "262144"
+      state: present
+
+  - name: start elasticsearch service
+    service:
+      name: elasticsearch
+      state: started
+      enabled: yes
+
+  - name: validate that elasticsearch is up and available
+    uri:
+      url: http://{{ ansible_default_ipv4.address }}:9200
+      status_code: 200
+    register: result
+    until: result.status == 200
+    retries: 60
+    delay: 2
+
+  - name: install kibana
+    yum:
+      name: kibana
+      state: present
+
+  - name: Open firewalld ports 5601 and redirect 443 to 5601
+    shell: |
+      firewall-cmd --add-port=5601/tcp
+      firewall-cmd --permanent --add-port=5601/tcp
+      firewall-cmd --add-service=https
+      firewall-cmd --permanent --add-service=https
+      firewall-cmd --runtime-to-permanent
+      systemctl restart firewalld
+      firewall-cmd --add-masquerade
+      firewall-cmd --permanent --add-masquerade      
+      firewall-cmd --permanent --direct --add-rule ipv4 nat OUTPUT 1 -p tcp -d 127.0.0.1 --dport 443 -j REDIRECT --to-ports 5601
+      firewall-cmd --permanent --direct --add-rule ipv6 nat OUTPUT 1 -p tcp -d 127.0.0.1 --dport 443 -j REDIRECT --to-ports 5601
+      firewall-cmd --permanent --direct --add-rule ipv4 nat PREROUTING 1 -p tcp -d {{ ansible_default_ipv4.address }} --dport 443 -j REDIRECT --to-ports 5601
+      firewall-cmd --permanent --direct --add-rule ipv6 nat PREROUTING 1 -p tcp -d {{ ansible_default_ipv4.address }} --dport 443 -j REDIRECT --to-ports 5601
+
+  - name: set kibana server address
+    lineinfile:
+      dest: /etc/kibana/kibana.yml
+      regexp: #server.name
+      insertafter: "^#server.host"
+      line: "server.host: \"{{ ansible_default_ipv4.address }}\""
+
+  - name: set elasticsearch node address
+    lineinfile:
+      dest: /etc/kibana/kibana.yml
+      regexp: #elasticsearch.hosts
+      insertafter: "^#elasticsearch.hosts"
+      line: "elasticsearch.hosts: http://{{ ansible_default_ipv4.address }}:9200"
+
+  - name: start kibana service
+    systemd:
+      name: kibana
+      state: started
+      enabled: yes
+      daemon_reload: yes
+
+  - name: install OpenJDK 1.8.0
+    yum:
+      name: java-1.8.0-openjdk
+      state: present
+
+  - name: install logstash
+    yum:
+      name: logstash
+      state: present
+
+  - name: place logstash processing template
+    template:
+      src: templates/logstash.conf
+      dest: /etc/logstash/conf.d/logstash.conf
+      force: yes
+
+  - name: set service listening address
+    lineinfile:
+      dest: /etc/logstash/logstash.yml
+      regexp: ^http.host
+      insertafter: "^# http.host" 
+      line: "http.host: {{ ansible_default_ipv4.address | quote }}"
+
+  - name: start logstash service
+    service:
+      name: logstash
+      state: started
+      enabled: yes
+
+  - name: wait for service to begin listening
+    wait_for:
+      port: 5055
+      delay: 30

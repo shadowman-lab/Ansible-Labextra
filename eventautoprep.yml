@@ -1,0 +1,16 @@
+---
+- hosts: all
+  name: Prep Prometheus to scrape more often on Tower metrics
+  gather_facts: false
+
+  tasks:
+
+  - name: Updated prometheus config
+    template:
+      src: templates/prometheus.yml.j2
+      dest: /etc/prometheus/prometheus.yml
+
+  - name: Restart Prometheus Service
+    service:
+      name: prometheus
+      state: restarted

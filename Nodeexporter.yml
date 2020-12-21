@@ -1,0 +1,27 @@
+---
+- name: Install Prometheus Node Exporter
+  hosts: all
+  vars:
+    - prometheus_components:
+      - node_exporter
+
+  collections:
+    - ansible.posix
+
+  roles:
+    - lrk.prometheus
+
+  tasks:
+  
+  - name: Open Firewalld for Node Exporter
+    firewalld:
+      port: 9100/tcp
+      permanent: yes
+      state: enabled 
+    notify: restart_firewalld
+
+  handlers:
+    - name: restart_firewalld
+      service:
+        name: firewalld
+        state: restarted

@@ -1,0 +1,15 @@
+---
+
+- name: Meraki SSID Playbook
+  hosts: localhost
+  gather_facts: false
+    
+  tasks:
+    - name: Create an SSID.
+      meraki_ssid:
+        org_name: "{{ org_name }}"
+        net_name: "{{ net_name }}"
+        state: present
+        name: "{{ ssid_name }}"
+        enabled: true
+      delegate_to: localhost
