@@ -19,7 +19,7 @@ scrape_configs:
   # Scrape job for prometheus himself
   - job_name: 'prometheus'
     static_configs:
-    - targets: ['{{ ansible_host }}:9090']
+    - targets: ['{{ inventory_hostname }}:9090']
 
   # Scrape Config for Tower
   - job_name: 'tower metrics'
@@ -34,13 +34,13 @@ scrape_configs:
   - job_name: 'tower-node'
     scrape_interval: {{ tower_scrape }}
     static_configs:
-    - targets: ['172.16.0.12:9100']
+    - targets: ['tower.shadowman.dev:9100']
 
   # Scrape job for prometheus node exporter
   - job_name: 'prometheus-node'
     scrape_interval: 5m
     static_configs:
-    - targets: ['{{ ansible_host }}:9100']
+    - targets: ['{{ inventory_hostname }}:9100']
 
 #  # The labels to add to any time series or alerts when communicating with
 #  # external systems (federation, remote storage, Alertmanager).
