@@ -14,7 +14,7 @@
   tasks:
   
   - name: Open Firewalld for Node Exporter
-    firewalld:
+    ansible.posix.firewalld:
       port: 9100/tcp
       permanent: yes
       state: enabled 

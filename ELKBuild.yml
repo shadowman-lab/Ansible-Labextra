@@ -73,7 +73,7 @@
       backrefs: yes
 
   - name: set vm.max_map_count to 262144
-    sysctl:
+    ansible.posix.sysctl:
       name: vm.max_map_count
       value: "262144"
       state: present

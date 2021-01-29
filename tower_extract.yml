@@ -8,5 +8,5 @@
     
   tasks: 
   - name: Extract Tower data
-    tower_export:
+    ansible.tower.tower_export:
       all: True

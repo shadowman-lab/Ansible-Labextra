@@ -31,14 +31,14 @@
   tasks:
   
   - name: Open Firewalld for grafana
-    firewalld:
+    ansible.posix.firewalld:
       port: 9090/tcp
       permanent: yes
       state: enabled 
     notify: restart_firewalld
 
   - name: Open Firewalld for prometheus
-    firewalld:
+    fansible.posix.irewalld:
       port: 3000/tcp
       permanent: yes
       state: enabled 
