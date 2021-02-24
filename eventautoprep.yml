@@ -9,8 +9,10 @@
     template:
       src: templates/prometheus.yml.j2
       dest: /etc/prometheus/prometheus.yml
+    notify: restart_prometheus
 
-  - name: Restart Prometheus Service
-    service:
-      name: prometheus
-      state: restarted
+  handlers:
+    - name: restart_prometheus
+      service:
+        name: prometheus
+        state: restarted
