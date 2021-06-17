@@ -5,6 +5,6 @@
   tasks:
 
   - name: restart elasticsearch service
-    service:
+    ansible.builtin.service:
       name: elasticsearch
       state: restarted

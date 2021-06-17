@@ -11,7 +11,7 @@
 
   tasks: 
   - name: Send Web Link via E-mail
-    mail:
+    community.general.mail:
       host: "{{ EMAIL_HOST }}"
       username: "{{ EMAIL_USERNAME }}"
       password: "{{ EMAIL_PASSWORD }}"
