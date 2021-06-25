@@ -9,4 +9,4 @@
   tasks: 
   - name: Extract Tower data
     ansible.tower.tower_export:
-      all: True
+      inventory: all
