@@ -1,3 +1,4 @@
+---
 - name: download and install elastic GPG key
   ansible.builtin.rpm_key:
     state=present
