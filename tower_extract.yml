@@ -9,5 +9,10 @@
   tasks: 
   - name: Extract Tower data
     ansible.tower.tower_export:
-      inventory: all
-      credentials: all
+      all: yes
+    register: output
+
+  - name: Create JSON
+    ansible.builtin.debug:
+      var: output
+
