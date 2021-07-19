@@ -10,3 +10,4 @@
   - name: Extract Tower data
     ansible.tower.tower_export:
       inventory: all
+      credentia: all
