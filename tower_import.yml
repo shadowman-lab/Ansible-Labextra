@@ -10,8 +10,8 @@
 
   - name: Load stored vars for import
     ansible.builtin.include_vars:
-    file: vars/tower_export.json
-    name: tower_export
+      file: vars/tower_export.json
+      name: tower_export
 
   - name: Import Tower data
     ansible.tower.tower_import:
