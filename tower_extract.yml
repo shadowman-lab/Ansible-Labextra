@@ -11,3 +11,4 @@
     ansible.tower.tower_export:
       job_templates: 'all'
       workflow_job_templates: 'all'
+    register: results
