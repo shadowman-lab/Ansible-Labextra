@@ -10,4 +10,4 @@
   - name: Extract Tower data
     ansible.tower.tower_export:
       job_templates: 'all'
-      workflow_templates: 'all'
+      workflow_job_templates: 'all'
