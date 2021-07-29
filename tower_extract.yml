@@ -9,11 +9,5 @@
   tasks: 
   - name: Extract Tower data
     ansible.tower.tower_export:
-      all: yes
-    register: output
-
-  - name: Import Tower data into AAP
-    ansible.tower.tower_import:
-      assets: "{{ output.assets }}"
-      tower_host: "aap.shadowman.dev"
-
+      job_templates: 'all'
+      workflow_templates: 'all'
