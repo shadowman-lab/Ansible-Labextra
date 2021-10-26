@@ -40,7 +40,7 @@ scrape_configs:
   - job_name: 'tower-node2'
     scrape_interval: {{ tower_scrape }}
     static_configs:
-    - targets: ['tower1.shadowman.dev:9100']
+    - targets: ['tower2.shadowman.dev:9100']
 
   # Scrape job for prometheus node exporter
   - job_name: 'prometheus-node'
