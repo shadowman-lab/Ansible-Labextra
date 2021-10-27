@@ -4,6 +4,7 @@
   vars:
     - prometheus_components:
       - node_exporter
+    - nodeexporter_version: 1.2.2
 
   collections:
     - ansible.posix
