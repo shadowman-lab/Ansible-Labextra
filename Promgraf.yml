@@ -38,7 +38,7 @@
     notify: restart_firewalld
 
   - name: Open Firewalld for prometheus
-    fansible.posix.irewalld:
+    ansible.posix.firewalld:
       port: 3000/tcp
       permanent: yes
       state: enabled 
