@@ -40,19 +40,19 @@ scrape_configs:
     - targets: ['tower.shadowman.dev:443']
 
   # Scrape config for Tower Node Exporter
-  - job_name: 'tower-node1'
+  - job_name: 'tower1.shadowman.dev'
     scrape_interval: {{ tower_scrape }}
     static_configs:
     - targets: ['tower1.shadowman.dev:9100']
 
   # Scrape config for Tower Node Exporter
-  - job_name: 'tower-node2'
+  - job_name: 'tower2.shadowman.dev'
     scrape_interval: {{ tower_scrape }}
     static_configs:
     - targets: ['tower2.shadowman.dev:9100']
 
   # Scrape job for prometheus node exporter
-  - job_name: 'prometheus-node'
+  - job_name: 'promgraf.shadowman.dev'
     scrape_interval: 5m
     static_configs:
     - targets: ['{{ inventory_hostname }}:9100']
