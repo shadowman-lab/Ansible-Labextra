@@ -53,7 +53,7 @@ scrape_configs:
 
   # Scrape job for prometheus node exporter
   - job_name: 'promgraf.shadowman.dev'
-    scrape_interval: 5m
+    scrape_interval: {{ tower_scrape }}
     static_configs:
     - targets: ['{{ inventory_hostname }}:9100']
 
