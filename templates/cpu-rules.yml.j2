@@ -8,12 +8,12 @@ groups:
       severity: warning
     annotations:
       summary: 'Host high CPU load (instance: {% raw %}{{ $labels.job }}{% endraw %})'
-      description: 'CPU load is > {{ cpuload }} VALUE = {% raw %}{{ $value }}{% endraw %}'
+      description: 'CPU load is > {{ cpuload }}% VALUE = {% raw %}{{ $value }}{% endraw %}'
   - alert: HostLowCpuLoad
-    expr: 100 - (avg by(instance,job) (rate(node_cpu_seconds_total{mode="idle"}[30m])) * 100) < 5
+    expr: 100 - (avg by(instance,job) (rate(node_cpu_seconds_total{mode="idle"}[30m])) * 100) < .1
     for: {{tower_scrape}}
     labels:
       severity: warning
     annotations:
       summary: 'Host low CPU load (instance: {% raw %}{{ $labels.job }}{% endraw %})'
-      description: 'CPU load is < 5 VALUE = {% raw %}{{ $value }}{% endraw %}'                                                                            
+      description: 'CPU load is < .1% VALUE = {% raw %}{{ $value }}{% endraw %}'                                                                            
