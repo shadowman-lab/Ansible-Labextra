@@ -1,0 +1,12 @@
+groups:
+- name: cpu-rules
+  rules:
+  - alert: HostHighCpuLoad
+    expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) >{{ cpuload }}
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: 'Host high CPU load (instance {{ $labels.instance }})'
+      description: 'CPU load is > {{ cpuload }}%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}'
+~                                                                                           
