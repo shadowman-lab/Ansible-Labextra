@@ -11,12 +11,6 @@
       dest: /etc/prometheus/prometheus.yml
     notify: restart_prometheus
 
-  - name: Updated cpu-alert rules
-    ansible.builtin.template:
-      src: templates/cpu-rules.yml.j2
-      dest: /etc/prometheus/rules/cpu-rules.yml
-    notify: restart_prometheus
-
   handlers:
     - name: restart_prometheus
       ansible.builtin.service:
