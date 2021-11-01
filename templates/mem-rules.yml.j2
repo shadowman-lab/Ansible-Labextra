@@ -1,0 +1,19 @@
+groups:
+- name: memory-rules
+  rules:
+  - alert: HostOutOfMemory
+    expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: 'Host out of memory (instance: {% raw %}{{ $labels.job }}{% endraw %})'
+      description: 'Node memory is filling up (< 10% left)  VALUE = {% raw %}{{ $value }}{% endraw %}'
+  - alert: HostTooMuchMemory
+    expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 > 90
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: 'Host too much free memory (instance: {% raw %}{{ $labels.job }}{% endraw %})'
+      description: 'Node memory is too free (> 90% left)  VALUE = {% raw %}{{ $value }}{% endraw %}'

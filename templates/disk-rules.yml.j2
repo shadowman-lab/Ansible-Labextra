@@ -1,0 +1,11 @@
+groups:
+- name: disk-rules
+  rules:
+  - alert: HostOutOfDiskSpace
+    expr: (node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 10
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: 'Host out of disk space (instance: {% raw %}{{ $labels.job }}{% endraw %})'
+      description: 'Disk is almost full (< 10% left)  VALUE = {% raw %}{{ $value }}{% endraw %}'

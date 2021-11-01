@@ -1,0 +1,33 @@
+[Unit]
+Description=Node exporter {{ nodeexporter_version }}
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+Restart=on-failure
+RestartSec=10
+ExecStart={{ nodeexporter_daemon_dir }}/node_exporter \
+              --collector.conntrack \
+              --collector.diskstats \
+              --collector.entropy \
+              --collector.edac \
+              --collector.filefd \
+              --collector.filesystem \
+              --collector.hwmon \
+              --collector.infiniband \
+              --collector.loadavg \
+              --collector.mdadm \
+              --collector.meminfo \
+              --collector.netdev \
+              --collector.netstat \
+              --collector.sockstat \
+              --collector.stat \
+              --collector.textfile \
+              --collector.time \
+              --collector.uname \
+              --collector.vmstat \
+              --collector.zfs
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,48 @@
+---
+# https://prometheus.io/docs/alerting/configuration/
+global:
+  resolve_timeout: {{ alertmanager_resolve_timeout | default('5m') }}
+
+{% if ( alertmanager_smtp_from is defined ) and  ( alertmanager_smtp_from != None ) %}
+  smtp_from: {{ alertmanager_smtp_from | default('') }}
+{% endif %}
+{% if ( alertmanager_smtp_smarthost is defined ) and  ( alertmanager_smtp_smarthost != None ) %}
+  smtp_smarthost: {{ alertmanager_smtp_smarthost | default('') }}
+{% endif %}
+{% if ( alertmanager_smtp_auth_username is defined ) and  ( alertmanager_smtp_auth_username != None ) %}
+  smtp_auth_username: {{ alertmanager_smtp_auth_username | default('') }}
+{% endif %}
+{% if ( alertmanager_smtp_auth_password is defined ) and  ( alertmanager_smtp_auth_password != None ) %}
+  smtp_auth_password: {{ alertmanager_smtp_auth_password | default('') }}
+{% endif %}
+{% if ( alertmanager_smtp_auth_secret is defined ) and  ( alertmanager_smtp_auth_secret != None ) %}
+  smtp_auth_secret: {{ alertmanager_smtp_auth_secret | default('') }}
+{% endif %}
+{% if ( alertmanager_smtp_auth_identity is defined ) and  ( alertmanager_smtp_auth_identity != None ) %}
+  smtp_auth_identity: {{ alertmanager_smtp_auth_identity | default('') }}
+{% endif %}
+{% if ( alertmanager_smtp_require_tls is defined ) and  ( alertmanager_smtp_require_tls != None ) %}
+  smtp_require_tls: {{ alertmanager_smtp_require_tls | default('false') }}
+{% endif %}
+
+{% if ( alertmanager_slack_api_url is defined ) and ( alertmanager_slack_api_url != None ) %}
+  slack_api_url: {{ alertmanager_slack_api_url }}
+{% endif %}
+
+route:
+  group_by: ['instance', 'alert']
+  group_wait: 30s
+  group_interval: 10s
+  repeat_interval: 3h
+  receiver: 'snow'
+
+receivers:
+  - name: 'snow'
+    webhook_configs:
+    - url: "http://localhost:9877/webhook"
+      send_resolved: false
+
+
+
+templates:
+  - {{ alertmanager_path_templates }}/*.tmpl

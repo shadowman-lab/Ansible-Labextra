@@ -1,0 +1,93 @@
+---
+- name: "Set Archive name fact"
+  set_fact:
+    prometheus_prom_archive: "prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}.tar.gz"
+
+- name: "Set Binary url"
+  set_fact:
+    prometheus_binary_url: "{{ __prometheus_prom_bin_url }}/v{{ prometheus_version }}/{{ prometheus_prom_archive }}"
+
+- name: "Ensure Prometheus binary exists"
+  stat:
+    path: "{{ prometheus_daemon_dir }}/prometheus"
+  register: prometheus_binary_stat
+
+- block:
+
+  - name: "Download Prometheus binaries"
+    get_url:
+      url: "{{ prometheus_binary_url }}"
+      dest: "/tmp/{{ prometheus_prom_archive }}"
+    retries: 5
+    delay: 10
+
+  - name: "Expand Prometheus binaries"
+    unarchive:
+      src: "/tmp/{{ prometheus_prom_archive }}"
+      dest: "{{ prometheus_path_install }}"
+      owner: "{{ prometheus_user }}"
+      group: "{{ prometheus_group }}"
+      copy: no
+
+  - name: "Remove Prometheus archive"
+    file:
+      path: "/tmp/{{ prometheus_prom_archive }}"
+      state: absent
+
+  when: not prometheus_binary_stat.stat.exists
+
+- name: "Ensure files permissions"
+  file:
+    path: "{{ prometheus_path_install }}"
+    state: directory
+    recurse: yes
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: "go-w"
+
+- name: "Create Prometheus directories"
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: "u=rwx,g=rx,o="
+  with_items:
+    - "{{ prometheus_path_data }}"
+    - "{{ prometheus_path_rules }}"
+    - "{{ prometheus_path_file_sd_config }}"
+
+- name: "Ensure Prometheus systemd's unit file exists"
+  template:
+    src: "prometheus.service.j2"
+    dest: "/etc/systemd/system/{{ prometheus_service_name }}.service"
+  when: "ansible_service_mgr == 'systemd'"
+
+- name: "Ensure Prometheus service (systemd) is started and enabled"
+  service:
+    name: "{{ prometheus_service_name }}"
+    state: started
+    enabled: yes
+  when: "ansible_service_mgr == 'systemd'"
+
+- name: "Ensure Prometheus configuration"
+  template:
+    src: "prometheus.yml.j2"
+    dest: "{{ prometheus_path_config }}/prometheus.yml"
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: "u=rw,g=,o="
+  when: (prometheus_config_template is not defined) or (prometheus_config_template == None)
+  notify:
+      - "restart prometheus service"
+
+- name: "Ensure User defined Prometheus configuration"
+  template:
+    src: "{{ playbook_dir}}/{{ prometheus_config_template }}"
+    dest: "{{ prometheus_path_config }}/prometheus.yml"
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: "u=rw,g=,o="
+  when: (prometheus_config_template is defined) and (prometheus_config_template != None)
+  notify:
+      - "restart prometheus service"

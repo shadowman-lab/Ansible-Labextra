@@ -1,0 +1,14 @@
+[Unit]
+Description=Alertmanager {{ alertmanager_version }}
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+Restart=on-failure
+RestartSec=10
+ExecStart={{ alertmanager_daemon_dir }}/alertmanager \
+              --config.file={{ prometheus_path_config }}/alertmanager.yml \
+              --web.external-url http://promgraf.shadowman.dev:9093
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,77 @@
+---
+- name: "Set Archive name fact"
+  set_fact:
+    prometheus_ne_archive: "node_exporter-{{ nodeexporter_version }}.{{ prometheus_platform_suffix }}.tar.gz"
+
+- name: "Set Binary url fact"
+  set_fact:
+    prometheus_ne_binary_url: "{{ __prometheus_ne_bin_url }}/v{{ nodeexporter_version }}/{{ prometheus_ne_archive }}"
+
+- name: "Ensure Node exporter binary exists"
+  stat:
+    path: "{{ nodeexporter_daemon_dir }}/node_exporter"
+  register: nodeexporter_binary_stat
+
+- block:
+
+  - name: "Download Node exporter binaries"
+    get_url:
+      url: "{{ prometheus_ne_binary_url }}"
+      dest: "/tmp/{{ prometheus_ne_archive }}"
+    retries: 5
+    delay: 10
+
+  - name: "Expand Node exporter binaries"
+    unarchive:
+      src: "/tmp/{{ prometheus_ne_archive }}"
+      dest: "{{ prometheus_path_install }}"
+      owner: "{{ prometheus_user }}"
+      group: "{{ prometheus_group }}"
+      copy: no
+
+  - name: "Remove Node exporter archive"
+    file:
+      path: "/tmp/{{ prometheus_ne_archive }}"
+      state: absent
+
+  when: not nodeexporter_binary_stat.stat.exists
+
+- name: "Ensure files permissions"
+  file:
+    path: "{{ prometheus_path_install }}"
+    state: directory
+    recurse: yes
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: "go-w"
+
+- name: "Create Node exporter directories"
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: "u=rwx,g=rx,o="
+  with_items:
+    - "{{ alertmanager_path_data }}"
+
+
+- name: "Ensure Node exporter systemd's unit file exists"
+  template:
+    src: "nodeexporter.service.j2"
+    dest: "/etc/systemd/system/{{ nodeexporter_service_name }}.service"
+  when: ( "ansible_service_mgr == 'systemd'")
+
+- name: "Ensure Node exporter service (systemd) is started and enabled"
+  service:
+    name: "{{ nodeexporter_service_name }}"
+    state: started
+    enabled: true
+  when: ( "ansible_service_mgr == 'systemd'")
+
+- name: "Ensure Node exporter systemd service run at boot time"
+  systemd:
+    name: "{{ nodeexporter_service_name }}"
+    enabled: yes
+  notify:
+    - "restart nodeexporter service"

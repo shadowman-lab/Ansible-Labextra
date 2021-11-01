@@ -17,6 +17,24 @@
       dest: /etc/prometheus/rules/cpu-rules.yml
     notify: restart_prometheus
 
+  - name: Updated disk-rules
+    ansible.builtin.template:
+      src: templates/disk-rules.yml.j2
+      dest: /etc/prometheus/rules/disk-rules.yml
+    notify: restart_prometheus
+
+  - name: Updated mem-rules
+    ansible.builtin.template:
+      src: templates/mem-rules.yml.j2
+      dest: /etc/prometheus/rules/mem-rules.yml
+    notify: restart_prometheus
+
+  - name: Updated exporter-rules
+    ansible.builtin.template:
+      src: templates/Exporter-rules.yml.j2
+      dest: /etc/prometheus/rules/exporter-rules.yml
+    notify: restart_prometheus
+
   handlers:
     - name: restart_prometheus
       ansible.builtin.service:

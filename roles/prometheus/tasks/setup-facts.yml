@@ -1,0 +1,26 @@
+---
+
+- name: "Use linux 64bit binaries"
+  set_fact:
+    prometheus_platform_suffix: "linux-amd64"
+  when: 'ansible_userspace_bits == "64"'
+
+- name: "Use linux 32bit binaries"
+  set_fact:
+    prometheus_platform_suffix: "linux-386"
+  when: 'ansible_userspace_bits == "32"'
+
+- name: "Set prometheus daemon directory fact"
+  set_fact:
+    prometheus_daemon_dir: "{{ prometheus_path_install }}/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}"
+  when: '"prometheus" in prometheus_components'
+
+- name: "Set alertmanager daemon directory fact"
+  set_fact:
+    alertmanager_daemon_dir: "{{ prometheus_path_install }}/alertmanager-{{ alertmanager_version }}.{{ prometheus_platform_suffix }}"
+  when: '"alertmanager" in prometheus_components'
+
+- name: "Set node exporter daemon directory fact"
+  set_fact:
+    nodeexporter_daemon_dir: "{{ prometheus_path_install }}/node_exporter-{{ nodeexporter_version }}.{{ prometheus_platform_suffix }}"
+  when: '"node_exporter" in prometheus_components'

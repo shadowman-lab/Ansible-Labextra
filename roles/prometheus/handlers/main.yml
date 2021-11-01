@@ -1,0 +1,17 @@
+---
+# handlers file for ansible-prometheus
+
+- name: "restart prometheus service"
+  service:
+    name: "{{ prometheus_service_name }}"
+    state: restarted
+
+- name: "restart alertmanager service"
+  service:
+    name: "{{ alertmanager_service_name }}"
+    state: restarted
+
+- name: "restart nodeexporter service"
+  service:
+    name: "{{ nodeexporter_service_name }}"
+    state: restarted

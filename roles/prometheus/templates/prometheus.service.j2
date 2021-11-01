@@ -1,0 +1,15 @@
+[Unit]
+Description=Prometheus {{ prometheus_version }}
+Documentation=https://prometheus.io/docs/introduction/overview/
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+Restart=on-failure
+RestartSec=10
+ExecStart={{ prometheus_daemon_dir }}/prometheus \
+              --config.file={{ prometheus_path_config }}/prometheus.yml \
+
+[Install]
+WantedBy=multi-user.target
