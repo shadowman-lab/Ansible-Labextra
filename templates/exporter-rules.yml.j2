@@ -8,4 +8,4 @@ groups:
       severity: critical
     annotations:
       description: 'Metrics exporter service for {% raw %}{{ $labels.job }}{% endraw %} running on {% raw %}{{ $labels.instance }}{% endraw %} has been down for more than 5 minutes.'
-      summary: 'Exporter down (instance {% raw %}{{ $labels.instance }}{% endraw %})'
+      summary: 'Exporter down (instance: {% raw %}{{ $labels.job }}{% endraw %})'
