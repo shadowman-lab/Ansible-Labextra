@@ -7,6 +7,6 @@
   tasks:
   
     - name: Start Node Exporter
-      ansible.builtin.service:
+      ansible.builtin.systemd:
         name: "{{ nodeexporter_service_name }}"
         state: started
