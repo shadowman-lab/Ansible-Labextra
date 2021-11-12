@@ -3,7 +3,7 @@ groups:
   rules:
   - alert: ExporterDown
     expr: up == 0
-    for: 5m
+    for: {{tower_scrape}}
     labels:
       severity: critical
     annotations:

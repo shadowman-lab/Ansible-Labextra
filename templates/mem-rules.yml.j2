@@ -3,7 +3,7 @@ groups:
   rules:
   - alert: HostOutOfMemory
     expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
-    for: 5m
+    for: {{tower_scrape}}
     labels:
       severity: warning
     annotations:
@@ -11,7 +11,7 @@ groups:
       description: 'Node memory is filling up (< 10% left)  VALUE = {% raw %}{{ $value }}{% endraw %}'
   - alert: HostTooMuchMemory
     expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 > 90
-    for: 5m
+    for: {{tower_scrape}}
     labels:
       severity: warning
     annotations:
