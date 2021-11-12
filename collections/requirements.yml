@@ -9,8 +9,6 @@ collections:
   - name: google.cloud
 
   - name: community.kubernetes
-    source: https://towerpah.shadowman.dev/api/galaxy/content/community/
 
   - name: community.general
-    source: https://towerpah.shadowman.dev/api/galaxy/content/community/
   
