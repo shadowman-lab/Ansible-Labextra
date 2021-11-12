@@ -31,7 +31,7 @@
 
   - name: Updated exporter-rules
     ansible.builtin.template:
-      src: templates/Exporter-rules.yml.j2
+      src: templates/exporter-rules.yml.j2
       dest: /etc/prometheus/rules/exporter-rules.yml
     notify: restart_prometheus
 
