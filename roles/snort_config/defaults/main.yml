@@ -1,0 +1,18 @@
+---
+# defaults file for snort-config
+#
+
+ids_provider: "snort"
+
+ids_provider_list:
+  - snort
+
+ids_config_remote_log_valid_protocols:
+  - udp
+  - tcp
+
+ids_config_remote_log: false
+
+ids_config_snort_version: 2.9.13
+
+ids_config_snort_rules_dir: /etc/snort/rules/

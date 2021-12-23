@@ -1,0 +1,11 @@
+---
+# handlers file for snort-config
+- name: restart snort
+  service:
+    name: snort
+    state: restarted
+
+- name: restart rsyslog
+  service:
+    name: rsyslog
+    state: restarted

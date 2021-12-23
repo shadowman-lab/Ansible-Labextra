@@ -1,0 +1,12 @@
+$ModLoad imfile
+$InputFileName /var/log/snort/merged.log
+$InputFileTag ids-config-snort-alert
+$InputFileStateFile stat-ids-config-snort-alert
+$InputFileSeverity alert
+$InputFileFacility local3
+$InputRunFileMonitor
+{% if (ids_config_remote_log_protocol is defined) and ids_config_remote_log_protocol == 'tcp' %}
+local3.* @@{{ids_config_remote_log_destination}}:514
+{% else %}
+local3.* @{{ids_config_remote_log_destination}}:514
+{% endif %}
