@@ -15,4 +15,6 @@ ids_config_remote_log: false
 
 ids_config_snort_version: 2.9.13
 
+ids_install_normalize_logs: false
+
 ids_config_snort_rules_dir: /etc/snort/rules/

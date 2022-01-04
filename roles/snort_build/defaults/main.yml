@@ -6,7 +6,9 @@ ids_provider_list:
 
 ids_install_snort_barnyard2_normalize_logs: false
 
-ids_install_snort_interface: eth0
+ids_config_snort_version: 2.9.13
+
+ids_install_snort_interface: eth1
 
 ids_install_snort_user: root
 ids_install_snort_group: root
@@ -20,7 +22,7 @@ ids_install_snort_barnyard_pkg: 'https://s3.amazonaws.com/ansible-security.works
 
 ids_install_snort_community_rules_url: 'https://s3.amazonaws.com/ansible-security.workshop-files/community-rules.tar.gz'
 ids_install_snort_registered_rules_url: 'https://s3.amazonaws.com/ansible-security.workshop-files/snortrules-snapshot-29130.tar.gz'
-
+ids_install_normalize_logs: false
 
 ids_install_snort_community_rules_subdir: 'community-rules'
 ids_install_snort_registered_rules_subdir: 'rules'
