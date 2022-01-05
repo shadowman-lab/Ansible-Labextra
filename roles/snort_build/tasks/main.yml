@@ -33,12 +33,15 @@
       yum:
         name: "{{ ids_install_pkgs }}"
         state: installed
+        disable_gpg_check: yes
       when: ids_install_pkgs is defined
 
     - name: install snort and dependent packages - defaults
       yum:
         name: "{{ ids_install_snort_pkgs }}"
         state: installed
+        disable_gpg_check: yes
+
       when: ids_install_pkgs is not defined
 
     - name: install pulledpork when specified
@@ -47,7 +50,7 @@
         state: installed
       when: ids_install_snort_use_pulledpork
 
-    # This is to work around a packaing problem with upstream snort's rpm install
+    # This is to work around a packaging problem with upstream snort's rpm install
     - name: symlink libdnet.1 to libdnet.so.1
       file:
         src: /usr/lib64/libdnet.so.1
