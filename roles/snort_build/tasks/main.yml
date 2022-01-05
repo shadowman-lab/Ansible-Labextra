@@ -2,7 +2,7 @@
 # tasks file for ansible-role-snort
 
 - name: package pre-reqs are installed
-  yum:
+  ansible.builtin.yum:
     state: present
     name:
       - libdnet
@@ -12,16 +12,21 @@
       - python3-pip
 
 - name: install idstools
-  pip:
+  ansible.builtin.pip:
     name: idstools
 
+- name: set selinux permissve because of policy issue that breaks snort
+  ansible.posix.selinux:
+    policy: targeted
+    state: permissive
+
 - name: verify required variable is defined
-  fail:
+  ansible.builtin.fail:
     msg: "Required variable 'ids_provider' is not defined"
   when: ids_provider is not defined
 
 - name: ensure ids_provider is valid
-  fail:
+  ansible.builtin.fail:
     msg: "Provided value for 'ids_provider' is not valid, must be one of {{ ids_provider_list }}"
   when: ids_provider not in ids_provider_list
 
@@ -30,14 +35,14 @@
   block:
   
     - name: install snort and dependent packages - user defined
-      yum:
+      ansible.builtin.yum:
         name: "{{ ids_install_pkgs }}"
         state: installed
         disable_gpg_check: yes
       when: ids_install_pkgs is defined
 
     - name: install snort and dependent packages - defaults
-      yum:
+      ansible.builtin.yum:
         name: "{{ ids_install_snort_pkgs }}"
         state: installed
         disable_gpg_check: yes
@@ -45,31 +50,31 @@
       when: ids_install_pkgs is not defined
 
     - name: install pulledpork when specified
-      yum:
+      ansible.builtin.yum:
         name: "pulledpork"
         state: installed
       when: ids_install_snort_use_pulledpork
 
     # This is to work around a packaging problem with upstream snort's rpm install
     - name: symlink libdnet.1 to libdnet.so.1
-      file:
+      ansible.builtin.file:
         src: /usr/lib64/libdnet.so.1
         dest: /usr/lib64/libdnet.1
         state: link
 
     - name: create dynamic rules dir
-      file:
+      ansible.builtin.file:
         path: /usr/local/lib/snort_dynamicrules
         state: directory
 
     - name: install snort systemd service unit file
-      template:
+      ansible.builtin.template:
         src: snort.service.j2
         dest: /etc/systemd/system/snort.service
       notify: systemctl daemon-reload
 
     - name: install snort sysconfig file
-      template:
+      ansible.builtin.template:
         src: etc_sysconfig_snort.j2
         dest: /etc/sysconfig/snort
       notify: systemctl daemon-reload
@@ -77,30 +82,30 @@
     - name: handle ids_install_snort_community_rules_url
       block:
         - name: get ids_install_snort_community_rules_url rules
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ ids_install_snort_community_rules_url }}"
             dest: "/tmp/ansible_role_ids_snort_community-rules.tar.gz"
 
         - name: unpack ids_install_snort_community_rules_url rules
-          unarchive:
+          ansible.builtin.unarchive:
             remote_src: true
             src: "/tmp/ansible_role_ids_snort_community-rules.tar.gz"
             dest: "/etc/snort/"
             creates: "/etc/snort/{{ ids_install_snort_community_rules_subdir }}"
 
         - name: check for /etc/snort/community-rules/ from rules
-          stat:
+          ansible.builtin.stat:
             path: '/etc/snort/community-rules/'
           register: comm_st
 
         - name: Grab the list of files in /etc/snort/community-rules/
-          find:
+          ansible.builtin.find:
             paths: '/etc/snort/community-rules/'
             file_type: file
           register: comm_rules_files
 
         - name: copy /etc/snort/community-rules/ files from rules into /etc/snort/
-          copy:
+          ansible.builtin.copy:
             remote_src: true
             src: '{{ item["path"] }}'
             dest: '/etc/snort/{{ item["path"]|basename }}'
@@ -111,17 +116,17 @@
             - item != "snort.conf"
 
         - name: check for community.rules from rules
-          stat:
+          ansible.builtin.stat:
             path: '/etc/snort/community.rules'
           register: commr_st
 
         - name: ensure rules dir exists
-          file:
+          ansible.builtin.file:
             path: '/etc/snort/rules'
             state: directory
 
         - name: copy community.rules into
-          copy:
+          ansible.builtin.copy:
             remote_src: true
             src: '/etc/snort/community.rules'
             dest: '/etc/snort/rules/community.rules'
@@ -137,30 +142,30 @@
     - name: handle ids_install_snort_registered_rules_url rules
       block:
         - name: get ids_install_snort_registered_rules_url rules
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ ids_install_snort_registered_rules_url }}"
             dest: "/tmp/ansible_role_ids_snort_registered_rules.tar.gz"
 
         - name: unpack ids_install_snort_registered_rules_url rules
-          unarchive:
+          ansible.builtin.unarchive:
             remote_src: true
             src: "/tmp/ansible_role_ids_snort_registered_rules.tar.gz"
             dest: "/etc/snort/"
             creates: "/etc/snort/{{ ids_install_snort_registered_rules_subdir }}"
 
         - name: check for /etc/snort/etc/ from rules
-          stat:
+          ansible.builtin.stat:
             path: '/etc/snort/etc/'
           register: st
 
         - name: Grab the list of files in /etc/snort/etc/
-          find:
+          ansible.builtin.find:
             paths: '/etc/snort/etc/'
             file_type: file
           register: reg_rules_files
 
         - name: copy /etc/snort/etc/ files from rules into /etc/snort/
-          copy:
+          ansible.builtin.copy:
             remote_src: true
             src: '{{ item["path"] }}'
             dest: '/etc/snort/{{ item["path"]|basename }}'
@@ -175,7 +180,7 @@
 
     # FIXME - this is kind of a hack
     - name: ensure snort required files exist
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         state: touch
         modification_time: "preserve"
@@ -187,12 +192,12 @@
 
     - block:
         - name: ensure dirs exist as needed for pulledpork
-          file:
+          ansible.builtin.file:
             path: "/etc/snort/rules/iplists/"
             state: "directory"
 
         - name: run pulledpork
-          shell: "/usr/bin/pulledpork -c /etc/pulledpork/pulledpork.conf && /usr/bin/touch /etc/pulledpork/ran_pulled_pork"
+          ansible.builtin.shell: "/usr/bin/pulledpork -c /etc/pulledpork/pulledpork.conf && /usr/bin/touch /etc/pulledpork/ran_pulled_pork"
           args:
             creates: /etc/pulledpork/ran_pulled_pork
       when: ids_install_snort_use_pulledpork
@@ -203,29 +208,29 @@
     # Originally from rmonk copr
     # https://copr.fedorainfracloud.org/coprs/rmonk/Snort-IDS/
     - name: install barnyard
-      yum:
+      ansible.builtin.yum:
         name: "{{ ids_install_snort_barnyard_pkg }}"
         state: installed
 
     - name: copy barnyard configuration template
-      template:
+      ansible.builtin.template:
         src: barnyard2.conf.j2
         dest: /etc/snort/barnyard2.conf
 
     - name: install barnyard2 systemd service unit file
-      template:
+      ansible.builtin.template:
         src: barnyard2.service.j2
         dest: /etc/systemd/system/barnyard2.service
       notify: systemctl daemon-reload
 
     - name: install barnyard2 sysconfig file
-      template:
+      ansible.builtin.template:
         src: etc_sysconfig_barnyard2.j2
         dest: /etc/sysconfig/barnyard2
       notify: systemctl daemon-reload
 
     - name: start barnyard2
-      service:
+      ansible.builtin.service:
         name: barnyard2
         state: started
         enabled: true
