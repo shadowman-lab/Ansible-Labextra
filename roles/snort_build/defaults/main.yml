@@ -8,7 +8,7 @@ ids_install_snort_barnyard2_normalize_logs: false
 
 ids_config_snort_version: 2.9.13
 
-ids_install_snort_interface: eth1
+ids_install_snort_interface: enp1s0
 
 ids_install_snort_user: root
 ids_install_snort_group: root
