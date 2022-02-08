@@ -1,13 +1,13 @@
-- name: Extract data from Tower
+- name: Extract data from Controller
   hosts: all
   gather_facts: false
   connection: local
 
-  collections:
-    - ansible.tower
-    
   tasks: 
-  - name: Extract Tower data
-    ansible.tower.tower_export:
+  - name: Extract controller data
+    ansible.controller.export:
       credentials: 'all'
+      controller_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+      controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+      controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
     register: results
