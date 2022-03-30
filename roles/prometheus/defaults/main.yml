@@ -13,9 +13,9 @@ prometheus_path_install: /opt/prometheus
 # Prometheus configuration path
 prometheus_path_config: /etc/prometheus
 # Prometheus logs path
-prometheus_path_log:  /var/log/prometheus
+prometheus_path_log: /var/log/prometheus
 # Prometheus PID path
-prometheus_path_pid:  /var/run/prometheus
+prometheus_path_pid: /var/run/prometheus
 # Prometheus Data path:
 prometheus_path_data: /var/lib/prometheus
 # Prometheus rules path:
@@ -54,7 +54,7 @@ prometheus_web_external_url: null
 # URL of alert manager service
 prometheus_alertmanager_url: null
 
-#Parameters for prometheus.yml
+# Parameters for prometheus.yml
 
 # Scrape interval: default 15s
 prometheus_scrape_interval: 15s

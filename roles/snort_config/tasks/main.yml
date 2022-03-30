@@ -11,6 +11,9 @@
   ansible.builtin.template:
     src: snort.conf.j2
     dest: /etc/snort/snort.conf
+    owner: root
+    group: root
+    mode: '0644'
   notify: restart snort
 
 - name: enable remote logging
@@ -20,6 +23,9 @@
         src: ids_confg_snort_rsyslog.conf.j2
         dest: /etc/rsyslog.d/ids_confg_snort_rsyslog.conf
         backup: true
+        owner: root
+        group: root
+        mode: '0644'
       notify:
         - restart rsyslog
   when: (ids_config_remote_log is defined) and ids_config_remote_log
@@ -37,6 +43,9 @@
         dest: /etc/rsyslog.d/ids_confg_snort_rsyslog.conf.backup
         remote_src: true
         backup: true
+        owner: root
+        group: root
+        mode: '0644'
       when: st.stat.exists
 
     - name: remove ids_config_snort_rsyslog.conf rsyslog config

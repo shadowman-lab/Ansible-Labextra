@@ -14,25 +14,28 @@
 
 - block:
 
-  - name: "Download Prometheus binaries"
-    ansible.builtin.get_url:
-      url: "{{ prometheus_binary_url }}"
-      dest: "/tmp/{{ prometheus_prom_archive }}"
-    retries: 5
-    delay: 10
+    - name: "Download Prometheus binaries"
+      ansible.builtin.get_url:
+        url: "{{ prometheus_binary_url }}"
+        dest: "/tmp/{{ prometheus_prom_archive }}"
+        owner: root
+        group: root
+        mode: '0644'
+      retries: 5
+      delay: 10
 
-  - name: "Expand Prometheus binaries"
-    ansible.builtin.unarchive:
-      src: "/tmp/{{ prometheus_prom_archive }}"
-      dest: "{{ prometheus_path_install }}"
-      owner: "{{ prometheus_user }}"
-      group: "{{ prometheus_group }}"
-      copy: no
+    - name: "Expand Prometheus binaries"
+      ansible.builtin.unarchive:
+        src: "/tmp/{{ prometheus_prom_archive }}"
+        dest: "{{ prometheus_path_install }}"
+        owner: "{{ prometheus_user }}"
+        group: "{{ prometheus_group }}"
+        copy: false
 
-  - name: "Remove Prometheus archive"
-    ansible.builtin.file:
-      path: "/tmp/{{ prometheus_prom_archive }}"
-      state: absent
+    - name: "Remove Prometheus archive"
+      ansible.builtin.file:
+        path: "/tmp/{{ prometheus_prom_archive }}"
+        state: absent
 
   when: not prometheus_binary_stat.stat.exists
 
@@ -82,15 +85,15 @@
     mode: "u=rw,g=,o="
   when: (prometheus_config_template is not defined) or (prometheus_config_template == None)
   notify:
-      - "restart prometheus service"
+    - "restart prometheus service"
 
 - name: "Ensure User defined Prometheus configuration"
   ansible.builtin.template:
-    src: "{{ playbook_dir}}/{{ prometheus_config_template }}"
+    src: "{{ playbook_dir }}/{{ prometheus_config_template }}"
     dest: "{{ prometheus_path_config }}/prometheus.yml"
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
     mode: "u=rw,g=,o="
   when: (prometheus_config_template is defined) and (prometheus_config_template != None)
   notify:
-      - "restart prometheus service"
+    - "restart prometheus service"

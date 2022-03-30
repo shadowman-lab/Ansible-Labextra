@@ -29,16 +29,16 @@
     - "{{ prometheus_path_pid }}"
 
 - name: "Set role facts"
-  ansible.builtin._include: setup-facts.yml
+  ansible.builtin.include_tasks: setup-facts.yml
 
 - name: "Install Node Exporter"
-  ansible.builtin._include: setup-nodeexporter.yml
+  ansible.builtin.include_tasks: setup-nodeexporter.yml
   when: '"node_exporter" in prometheus_components'
 
 - name: "Install Alert manager"
-  ansible.builtin._include: setup-alertmanager.yml
+  ansible.builtin.include_tasks: setup-alertmanager.yml
   when: '"alertmanager" in prometheus_components'
 
 - name: "Install Prometheus"
-  ansible.builtin._include: setup-prometheus.yml
+  ansible.builtin.include_tasks: setup-prometheus.yml
   when: '"prometheus" in prometheus_components'

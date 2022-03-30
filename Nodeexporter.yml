@@ -3,7 +3,7 @@
   hosts: all
   vars:
     - prometheus_components:
-      - node_exporter
+        - node_exporter
     - nodeexporter_version: 1.2.2
 
   collections:
@@ -14,12 +14,12 @@
 
   tasks:
 
-  - name: Open Firewalld for Node Exporter
-    ansible.posix.firewalld:
-      port: 9100/tcp
-      permanent: yes
-      state: enabled 
-    notify: restart_firewalld
+    - name: Open Firewalld for Node Exporter
+      ansible.posix.firewalld:
+        port: 9100/tcp
+        permanent: true
+        state: enabled
+      notify: restart_firewalld
 
   handlers:
     - name: restart_firewalld

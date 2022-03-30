@@ -33,19 +33,19 @@
 - name: install ids provider snort
   when: "ids_provider == 'snort'"
   block:
-  
+
     - name: install snort and dependent packages - user defined
       ansible.builtin.yum:
         name: "{{ ids_install_pkgs }}"
         state: installed
-        disable_gpg_check: yes
+        disable_gpg_check: true
       when: ids_install_pkgs is defined
 
     - name: install snort and dependent packages - defaults
       ansible.builtin.yum:
         name: "{{ ids_install_snort_pkgs }}"
         state: installed
-        disable_gpg_check: yes
+        disable_gpg_check: true
 
       when: ids_install_pkgs is not defined
 
@@ -66,17 +66,26 @@
       ansible.builtin.file:
         path: /usr/local/lib/snort_dynamicrules
         state: directory
+        owner: root
+        group: root
+        mode: '0644'
 
     - name: install snort systemd service unit file
       ansible.builtin.template:
         src: snort.service.j2
         dest: /etc/systemd/system/snort.service
+        owner: root
+        group: root
+        mode: '0644'
       notify: systemctl daemon-reload
 
     - name: install snort sysconfig file
       ansible.builtin.template:
         src: etc_sysconfig_snort.j2
         dest: /etc/sysconfig/snort
+        owner: root
+        group: root
+        mode: '0644'
       notify: systemctl daemon-reload
 
     - name: handle ids_install_snort_community_rules_url
@@ -85,6 +94,9 @@
           ansible.builtin.get_url:
             url: "{{ ids_install_snort_community_rules_url }}"
             dest: "/tmp/ansible_role_ids_snort_community-rules.tar.gz"
+            owner: root
+            group: root
+            mode: '0644'
 
         - name: unpack ids_install_snort_community_rules_url rules
           ansible.builtin.unarchive:
@@ -110,6 +122,9 @@
             src: '{{ item["path"] }}'
             dest: '/etc/snort/{{ item["path"]|basename }}'
             force: false
+            owner: root
+            group: root
+            mode: '0644'
           loop: "{{ comm_rules_files['files'] }}"
           when:
             - (comm_st.stat.isdir is defined) and comm_st.stat.isdir
@@ -124,6 +139,9 @@
           ansible.builtin.file:
             path: '/etc/snort/rules'
             state: directory
+            owner: root
+            group: root
+            mode: '0644'
 
         - name: copy community.rules into
           ansible.builtin.copy:
@@ -131,6 +149,9 @@
             src: '/etc/snort/community.rules'
             dest: '/etc/snort/rules/community.rules'
             force: false
+            owner: root
+            group: root
+            mode: '0644'
           when: (commr_st.stat.isdir is defined) and commr_st.stat.exists
       when: >
         (ids_install_snort_community_rules_url is defined) and
@@ -145,6 +166,9 @@
           ansible.builtin.get_url:
             url: "{{ ids_install_snort_registered_rules_url }}"
             dest: "/tmp/ansible_role_ids_snort_registered_rules.tar.gz"
+            owner: root
+            group: root
+            mode: '0644'
 
         - name: unpack ids_install_snort_registered_rules_url rules
           ansible.builtin.unarchive:
@@ -170,6 +194,9 @@
             src: '{{ item["path"] }}'
             dest: '/etc/snort/{{ item["path"]|basename }}'
             force: false
+            owner: root
+            group: root
+            mode: '0644'
           loop: "{{ reg_rules_files['files'] }}"
           when:
             - (st.stat.isdir is defined) and st.stat.isdir
@@ -185,6 +212,9 @@
         state: touch
         modification_time: "preserve"
         access_time: "preserve"
+        owner: root
+        group: root
+        mode: '0644'
       with_items:
         - /etc/snort/rules/white_list.rules
         - /etc/snort/rules/black_list.rules
@@ -195,6 +225,9 @@
           ansible.builtin.file:
             path: "/etc/snort/rules/iplists/"
             state: "directory"
+            owner: root
+            group: root
+            mode: '0644'
 
         - name: run pulledpork
           ansible.builtin.shell: "/usr/bin/pulledpork -c /etc/pulledpork/pulledpork.conf && /usr/bin/touch /etc/pulledpork/ran_pulled_pork"
@@ -216,17 +249,26 @@
       ansible.builtin.template:
         src: barnyard2.conf.j2
         dest: /etc/snort/barnyard2.conf
+        owner: root
+        group: root
+        mode: '0644'
 
     - name: install barnyard2 systemd service unit file
       ansible.builtin.template:
         src: barnyard2.service.j2
         dest: /etc/systemd/system/barnyard2.service
+        owner: root
+        group: root
+        mode: '0644'
       notify: systemctl daemon-reload
 
     - name: install barnyard2 sysconfig file
       ansible.builtin.template:
         src: etc_sysconfig_barnyard2.j2
         dest: /etc/sysconfig/barnyard2
+        owner: root
+        group: root
+        mode: '0644'
       notify: systemctl daemon-reload
 
     - name: start barnyard2

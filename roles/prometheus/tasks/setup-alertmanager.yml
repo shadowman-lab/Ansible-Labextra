@@ -14,25 +14,28 @@
 
 - block:
 
-  - name: "Download Alert Manager binaries"
-    ansible.builtin.get_url:
-      url: "{{ prometheus_am_binary_url }}"
-      dest: "/tmp/{{ prometheus_am_archive }}"
-    retries: 5
-    delay: 10
+    - name: "Download Alert Manager binaries"
+      ansible.builtin.get_url:
+        url: "{{ prometheus_am_binary_url }}"
+        dest: "/tmp/{{ prometheus_am_archive }}"
+        owner: root
+        group: root
+        mode: '0644'
+      retries: 5
+      delay: 10
 
-  - name: "Expand Alert Manager binaries"
-    ansible.builtin.unarchive:
-      src: "/tmp/{{ prometheus_am_archive }}"
-      dest: "{{ prometheus_path_install }}"
-      owner: "{{ prometheus_user }}"
-      group: "{{ prometheus_group }}"
-      copy: no
+    - name: "Expand Alert Manager binaries"
+      ansible.builtin.unarchive:
+        src: "/tmp/{{ prometheus_am_archive }}"
+        dest: "{{ prometheus_path_install }}"
+        owner: "{{ prometheus_user }}"
+        group: "{{ prometheus_group }}"
+        copy: false
 
-  - name: "Remove Alert Manager archive"
-    ansible.builtin.file:
-      path: "/tmp/{{ prometheus_am_archive }}"
-      state: absent
+    - name: "Remove Alert Manager archive"
+      ansible.builtin.file:
+        path: "/tmp/{{ prometheus_am_archive }}"
+        state: absent
 
   when: not alertmanager_binary_stat.stat.exists
 
@@ -80,4 +83,4 @@
     group: "{{ prometheus_group }}"
     mode: "u=rw,g=,o="
   notify:
-      - "restart alertmanager service"
+    - "restart alertmanager service"

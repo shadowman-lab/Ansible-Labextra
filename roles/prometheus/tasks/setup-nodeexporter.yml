@@ -14,25 +14,28 @@
 
 - block:
 
-  - name: "Download Node exporter binaries"
-    ansible.builtin.get_url:
-      url: "{{ prometheus_ne_binary_url }}"
-      dest: "/tmp/{{ prometheus_ne_archive }}"
-    retries: 5
-    delay: 10
+    - name: "Download Node exporter binaries"
+      ansible.builtin.get_url:
+        url: "{{ prometheus_ne_binary_url }}"
+        dest: "/tmp/{{ prometheus_ne_archive }}"
+        owner: root
+        group: root
+        mode: '0644'
+      retries: 5
+      delay: 10
 
-  - name: "Expand Node exporter binaries"
-    ansible.builtin.unarchive:
-      src: "/tmp/{{ prometheus_ne_archive }}"
-      dest: "{{ prometheus_path_install }}"
-      owner: "{{ prometheus_user }}"
-      group: "{{ prometheus_group }}"
-      copy: false
+    - name: "Expand Node exporter binaries"
+      ansible.builtin.unarchive:
+        src: "/tmp/{{ prometheus_ne_archive }}"
+        dest: "{{ prometheus_path_install }}"
+        owner: "{{ prometheus_user }}"
+        group: "{{ prometheus_group }}"
+        copy: false
 
-  - name: "Remove Node exporter archive"
-    ansible.builtin.file:
-      path: "/tmp/{{ prometheus_ne_archive }}"
-      state: absent
+    - name: "Remove Node exporter archive"
+      ansible.builtin.file:
+        path: "/tmp/{{ prometheus_ne_archive }}"
+        state: absent
 
   when: not nodeexporter_binary_stat.stat.exists
 

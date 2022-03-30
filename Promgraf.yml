@@ -3,26 +3,26 @@
   hosts: all
   vars:
     - prometheus_components:
-      - prometheus
-      - node_exporter
-      - alertmanager
+        - prometheus
+        - node_exporter
+        - alertmanager
     - tower_scrape: 5m
     - prometheus_version: 2.30.3
     - alertmanager_version: 0.23.0
     - nodeexporter_version: 1.2.2
 
-#If issues arise with grafana yum install, then manually install
-#update /etc/yum.repos.d/grafana.repo to the info below
-#[grafana]
-#name=grafana
-#baseurl=https://packages.grafana.com/oss/rpm
-#repo_gpgcheck=1
-#enabled=1
-#gpgcheck=1
-#gpgkey=https://packages.grafana.com/gpg.key
-#sslverify=1
-#sslcacert=/etc/pki/tls/certs/ca-bundle.crt
-#Then run yum install grafana
+# If issues arise with grafana yum install, then manually install
+# update /etc/yum.repos.d/grafana.repo to the info below
+# [grafana]
+# name=grafana
+# baseurl=https://packages.grafana.com/oss/rpm
+# repo_gpgcheck=1
+# enabled=1
+# gpgcheck=1
+# gpgkey=https://packages.grafana.com/gpg.key
+# sslverify=1
+# sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+# Then run yum install grafana
 
   roles:
     - prometheus
@@ -33,19 +33,19 @@
 
   tasks:
 
-  - name: Open Firewalld for grafana
-    ansible.posix.firewalld:
-      port: 9090/tcp
-      permanent: true
-      state: enabled 
-    notify: restart_firewalld
+    - name: Open Firewalld for grafana
+      ansible.posix.firewalld:
+        port: 9090/tcp
+        permanent: true
+        state: enabled
+      notify: restart_firewalld
 
-  - name: Open Firewalld for prometheus
-    ansible.posix.firewalld:
-      port: 3000/tcp
-      permanent: true
-      state: enabled 
-    notify: restart_firewalld
+    - name: Open Firewalld for prometheus
+      ansible.posix.firewalld:
+        port: 3000/tcp
+        permanent: true
+        state: enabled
+      notify: restart_firewalld
 
   handlers:
     - name: restart_firewalld
