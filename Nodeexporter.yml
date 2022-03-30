@@ -13,7 +13,7 @@
     - lrk.prometheus
 
   tasks:
-  
+
   - name: Open Firewalld for Node Exporter
     ansible.posix.firewalld:
       port: 9100/tcp

@@ -1,8 +1,7 @@
 ---
 - name: Install and Config Snort
   hosts: all
-  
-  
+
   roles:
     - snort_build
     - snort_config

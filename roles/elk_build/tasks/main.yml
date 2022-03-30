@@ -9,8 +9,7 @@
     name: elasticsearch
     description: Elastic 7.x Repo
     baseurl: https://artifacts.elastic.co/packages/7.x/yum
-    gpgcheck: yes
-
+    gpgcheck: true
 
 - name: Open firewall ports
   ansible.builtin.shell : | 
@@ -47,20 +46,23 @@
   ansible.builtin.template:
     src: templates/elasticsearch.yml.j2
     dest: /etc/elasticsearch/elasticsearch.yml
+    owner: root
+    group: root
+    mode: '0644'
 
 - name: set jvm minimum memory to 50%
   ansible.builtin.lineinfile:
     dest: /etc/elasticsearch/jvm.options
     regexp: '^(.*)Xms(\d+)g(.*)$'
     line: '\1Xms{{ (ansible_memtotal_mb*0.5)|int|abs }}m\3'
-    backrefs: yes
+    backrefs: true
 
 - name: set jvm maximum memory to 50%
   ansible.builtin.lineinfile:
     dest: /etc/elasticsearch/jvm.options
     regexp: '^(.*)Xmx(\d+)g(.*)$'
     line: '\1Xmx{{ (ansible_memtotal_mb*0.5)|int|abs }}m\3'
-    backrefs: yes
+    backrefs: true
 
 - name: set vm.max_map_count to 262144
   ansible.posix.sysctl:
@@ -72,7 +74,7 @@
   ansible.builtin.service:
     name: elasticsearch
     state: started
-    enabled: yes
+    enabled: true
 
 - name: validate that elasticsearch is up and available
   ansible.builtin.uri:
@@ -121,8 +123,8 @@
   ansible.builtin.systemd:
     name: kibana
     state: started
-    enabled: yes
-    daemon_reload: yes
+    enabled: true
+    daemon_reload: true
 
 - name: install OpenJDK 1.8.0
   ansible.builtin.yum:
@@ -138,7 +140,7 @@
   ansible.builtin.template:
     src: templates/logstash.conf
     dest: /etc/logstash/conf.d/logstash.conf
-    force: yes
+    force: true
 
 - name: set service listening address
   ansible.builtin.lineinfile:
@@ -151,7 +153,7 @@
   ansible.builtin.service:
     name: logstash
     state: started
-    enabled: yes
+    enabled: true
 
 - name: wait for service to begin listening
   ansible.builtin.wait_for:

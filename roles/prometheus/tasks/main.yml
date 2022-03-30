@@ -2,21 +2,21 @@
 # tasks file for ansible-prometheus
 
 - name: "Create Prometheus group"
-  group:
+  ansible.builtin.group:
     name: "{{ prometheus_group }}"
     state: present
 
 - name: "Create Prometheus system user"
-  user:
+  ansible.builtin.user:
     name: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
-    createhome: no
+    createhome: false
     shell: "/sbin/nologin"
     comment: "Prometheus System user"
     state: present
 
 - name: "Create Prometheus directories"
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: "{{ prometheus_user }}"
@@ -29,16 +29,16 @@
     - "{{ prometheus_path_pid }}"
 
 - name: "Set role facts"
-  include: setup-facts.yml
+  ansible.builtin._include: setup-facts.yml
 
 - name: "Install Node Exporter"
-  include: setup-nodeexporter.yml
+  ansible.builtin._include: setup-nodeexporter.yml
   when: '"node_exporter" in prometheus_components'
 
 - name: "Install Alert manager"
-  include: setup-alertmanager.yml
+  ansible.builtin._include: setup-alertmanager.yml
   when: '"alertmanager" in prometheus_components'
 
 - name: "Install Prometheus"
-  include: setup-prometheus.yml
+  ansible.builtin._include: setup-prometheus.yml
   when: '"prometheus" in prometheus_components'

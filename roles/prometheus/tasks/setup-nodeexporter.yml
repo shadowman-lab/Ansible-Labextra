@@ -1,52 +1,52 @@
 ---
 - name: "Set Archive name fact"
-  set_fact:
+  ansible.builtin.set_fact:
     prometheus_ne_archive: "node_exporter-{{ nodeexporter_version }}.{{ prometheus_platform_suffix }}.tar.gz"
 
 - name: "Set Binary url fact"
-  set_fact:
+  ansible.builtin.set_fact:
     prometheus_ne_binary_url: "{{ __prometheus_ne_bin_url }}/v{{ nodeexporter_version }}/{{ prometheus_ne_archive }}"
 
 - name: "Ensure Node exporter binary exists"
-  stat:
+  ansible.builtin.stat:
     path: "{{ nodeexporter_daemon_dir }}/node_exporter"
   register: nodeexporter_binary_stat
 
 - block:
 
   - name: "Download Node exporter binaries"
-    get_url:
+    ansible.builtin.get_url:
       url: "{{ prometheus_ne_binary_url }}"
       dest: "/tmp/{{ prometheus_ne_archive }}"
     retries: 5
     delay: 10
 
   - name: "Expand Node exporter binaries"
-    unarchive:
+    ansible.builtin.unarchive:
       src: "/tmp/{{ prometheus_ne_archive }}"
       dest: "{{ prometheus_path_install }}"
       owner: "{{ prometheus_user }}"
       group: "{{ prometheus_group }}"
-      copy: no
+      copy: false
 
   - name: "Remove Node exporter archive"
-    file:
+    ansible.builtin.file:
       path: "/tmp/{{ prometheus_ne_archive }}"
       state: absent
 
   when: not nodeexporter_binary_stat.stat.exists
 
 - name: "Ensure files permissions"
-  file:
+  ansible.builtin.file:
     path: "{{ prometheus_path_install }}"
     state: directory
-    recurse: yes
+    recurse: true
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
     mode: "go-w"
 
 - name: "Create Node exporter directories"
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: "{{ prometheus_user }}"
@@ -57,21 +57,24 @@
 
 
 - name: "Ensure Node exporter systemd's unit file exists"
-  template:
+  ansible.builtin.template:
     src: "nodeexporter.service.j2"
     dest: "/etc/systemd/system/{{ nodeexporter_service_name }}.service"
+    owner: root
+    group: root
+    mode: '0644'
   when: ( "ansible_service_mgr == 'systemd'")
 
 - name: "Ensure Node exporter service (systemd) is started and enabled"
-  service:
+  ansible.builtin.service:
     name: "{{ nodeexporter_service_name }}"
     state: started
     enabled: true
   when: ( "ansible_service_mgr == 'systemd'")
 
 - name: "Ensure Node exporter systemd service run at boot time"
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ nodeexporter_service_name }}"
-    enabled: yes
+    enabled: true
   notify:
     - "restart nodeexporter service"

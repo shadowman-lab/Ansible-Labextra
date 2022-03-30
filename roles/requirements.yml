@@ -1,3 +1,4 @@
+---
 - name: lrk.prometheus
 
 - name: lrk.grafana

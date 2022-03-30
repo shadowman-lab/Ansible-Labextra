@@ -1,7 +1,6 @@
 ---
 - name: Setup ELK Stack
   hosts: all
-  
-  
+
   roles:
     - elk_build
