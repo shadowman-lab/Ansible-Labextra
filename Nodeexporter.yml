@@ -10,7 +10,7 @@
     - ansible.posix
 
   roles:
-    - lrk.prometheus
+    - elk_build
 
   tasks:
 
