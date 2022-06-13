@@ -220,7 +220,8 @@
         - /etc/snort/rules/black_list.rules
         - /etc/snort/rules/local.rules
 
-    - block:
+    - name: block for snort
+      block:
         - name: ensure dirs exist as needed for pulledpork
           ansible.builtin.file:
             path: "/etc/snort/rules/iplists/"

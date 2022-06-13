@@ -12,7 +12,8 @@
     path: "{{ nodeexporter_daemon_dir }}/node_exporter"
   register: nodeexporter_binary_stat
 
-- block:
+- name: block for node exporter
+  block:
 
     - name: "Download Node exporter binaries"
       ansible.builtin.get_url:

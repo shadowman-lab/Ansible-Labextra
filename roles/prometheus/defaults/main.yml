@@ -19,9 +19,9 @@ prometheus_path_pid: /var/run/prometheus
 # Prometheus Data path:
 prometheus_path_data: /var/lib/prometheus
 # Prometheus rules path:
-prometheus_path_rules: "{{ prometheus_path_config}}/rules"
+prometheus_path_rules: "{{ prometheus_path_config }}/rules"
 # Prometheus file sd config path:
-prometheus_path_file_sd_config: "{{ prometheus_path_config}}/tgroups"
+prometheus_path_file_sd_config: "{{ prometheus_path_config }}/tgroups"
 
 # Prometheus components to install
 # Can be a mix of:

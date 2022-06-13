@@ -12,7 +12,8 @@
     path: "{{ prometheus_daemon_dir }}/prometheus"
   register: prometheus_binary_stat
 
-- block:
+- name: block for prometheus
+  block:
 
     - name: "Download Prometheus binaries"
       ansible.builtin.get_url:

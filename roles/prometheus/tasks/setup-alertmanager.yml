@@ -12,7 +12,8 @@
     path: "{{ alertmanager_daemon_dir }}/alertmanager"
   register: alertmanager_binary_stat
 
-- block:
+- name: block for alert manager
+  block:
 
     - name: "Download Alert Manager binaries"
       ansible.builtin.get_url:
