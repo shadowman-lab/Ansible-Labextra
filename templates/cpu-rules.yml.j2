@@ -2,7 +2,7 @@ groups:
 - name: cpu-rules
   rules:
   - alert: HostHighCpuLoad
-    expr: 100 - (avg by(instance,job) (rate(node_cpu_seconds_total{mode="idle"}[30m])) * 100) > {{ cpuload }}
+    expr: 100 - (avg by(instance,job) (rate(node_cpu_seconds_total{mode="idle"}[{{ rate_number }}])) * 100) > {{ cpuload }}
     for: {{tower_scrape}}
     labels:
       severity: warning
@@ -10,7 +10,7 @@ groups:
       summary: 'Host high CPU load (instance: {% raw %}{{ $labels.job }}{% endraw %})'
       description: 'CPU load is > {{ cpuload }}% VALUE = {% raw %}{{ $value }}{% endraw %}'
   - alert: HostLowCpuLoad
-    expr: 100 - (avg by(instance,job) (rate(node_cpu_seconds_total{mode="idle"}[30m])) * 100) < .1
+    expr: 100 - (avg by(instance,job) (rate(node_cpu_seconds_total{mode="idle"}[{{ rate_number }}])) * 100) < .1
     for: {{tower_scrape}}
     labels:
       severity: warning
