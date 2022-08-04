@@ -31,7 +31,7 @@ global:
 
 route:
   group_by: ['instance', 'alert']
-  group_wait: 30s
+  group_wait: 5s
   group_interval: 10s
   repeat_interval: 3h
   receiver: 'snow'
