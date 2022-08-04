@@ -5,7 +5,7 @@ groups:
     expr: 100 - (avg by(instance,job) (rate(node_cpu_seconds_total{mode="idle"}[{{ rate_number }}])) * 100) > {{ cpuload }}
     for: {{tower_scrape}}
     labels:
-      severity: warning
+      severity: critical
     annotations:
       summary: 'Host high CPU load (instance: {% raw %}{{ $labels.job }}{% endraw %})'
       description: 'CPU load is > {{ cpuload }}% VALUE = {% raw %}{{ $value }}{% endraw %}'
