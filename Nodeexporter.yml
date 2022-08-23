@@ -10,7 +10,7 @@
     - ansible.posix
 
   roles:
-    - elk_build
+    - prometheus
 
   tasks:
 
