@@ -155,7 +155,7 @@
           when: (commr_st.stat.isdir is defined) and commr_st.stat.exists
       when: >
         (ids_install_snort_community_rules_url is defined) and
-          ids_install_snort_community_rules_url|length|int > 0
+          ids_install_snort_community_rules_url | length | int > 0
 
     # NOTE: Order matters, snort registered rules should "win" over community
     #       rules if/when there is ever a conflict in the content. Always copy
@@ -203,7 +203,7 @@
             - item != "snort.conf"
       when: >
         (ids_install_snort_registered_rules_url is defined) and
-          ids_install_snort_registered_rules_url|length|int > 0
+          ids_install_snort_registered_rules_url | length | int > 0
 
     # FIXME - this is kind of a hack
     - name: ensure snort required files exist
