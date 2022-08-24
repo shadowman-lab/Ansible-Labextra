@@ -6,23 +6,5 @@
         - node_exporter
     - nodeexporter_version: 1.2.2
 
-  collections:
-    - ansible.posix
-
   roles:
     - prometheus
-
-  tasks:
-
-    - name: Open Firewalld for Node Exporter
-      ansible.posix.firewalld:
-        port: 9100/tcp
-        permanent: true
-        state: enabled
-      notify: restart_firewalld
-
-  handlers:
-    - name: restart_firewalld
-      ansible.builtin.service:
-        name: firewalld
-        state: restarted

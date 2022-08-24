@@ -15,3 +15,8 @@
   ansible.builtin.service:
     name: "{{ nodeexporter_service_name }}"
     state: restarted
+
+- name: restart_firewalld
+  ansible.builtin.service:
+    name: firewalld
+    state: restarted
