@@ -18,3 +18,4 @@ warn_list:
   - no-changed-when
   - git-latest
   - var-spacing
+  - name[casing]

@@ -12,7 +12,7 @@
     path: "{{ alertmanager_daemon_dir }}/alertmanager"
   register: alertmanager_binary_stat
 
-- name: block for alert manager
+- name: Block for alert manager
   block:
 
     - name: "Download Alert Manager binaries"

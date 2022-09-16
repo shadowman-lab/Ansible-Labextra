@@ -12,7 +12,7 @@
     path: "{{ prometheus_daemon_dir }}/prometheus"
   register: prometheus_binary_stat
 
-- name: block for prometheus
+- name: Block for prometheus
   block:
 
     - name: "Download Prometheus binaries"

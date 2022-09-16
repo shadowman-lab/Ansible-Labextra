@@ -12,7 +12,7 @@
     path: "{{ nodeexporter_daemon_dir }}/node_exporter"
   register: nodeexporter_binary_stat
 
-- name: block for node exporter
+- name: Block for node exporter
   block:
 
     - name: "Download Node exporter binaries"
