@@ -120,7 +120,7 @@
           ansible.builtin.copy:
             remote_src: true
             src: '{{ item["path"] }}'
-            dest: '/etc/snort/{{ item["path"]|basename }}'
+            dest: '/etc/snort/{{ item["path"] | basename }}'
             force: false
             owner: root
             group: root
@@ -192,7 +192,7 @@
           ansible.builtin.copy:
             remote_src: true
             src: '{{ item["path"] }}'
-            dest: '/etc/snort/{{ item["path"]|basename }}'
+            dest: '/etc/snort/{{ item["path"] | basename }}'
             force: false
             owner: root
             group: root

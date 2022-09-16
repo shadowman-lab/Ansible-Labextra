@@ -67,14 +67,14 @@
     owner: root
     group: root
     mode: '0644'
-  when: ( "ansible_service_mgr == 'systemd'")
+  when: ("ansible_service_mgr == 'systemd'")
 
 - name: "Ensure Node exporter service (systemd) is started and enabled"
   ansible.builtin.service:
     name: "{{ nodeexporter_service_name }}"
     state: started
     enabled: true
-  when: ( "ansible_service_mgr == 'systemd'")
+  when: ("ansible_service_mgr == 'systemd'")
 
 - name: "Ensure Node exporter systemd service run at boot time"
   ansible.builtin.systemd:

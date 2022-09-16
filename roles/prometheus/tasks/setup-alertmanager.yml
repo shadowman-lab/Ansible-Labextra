@@ -74,7 +74,7 @@
     name: "{{ alertmanager_service_name }}"
     state: started
     enabled: true
-  when: ( "ansible_service_mgr == 'systemd'")
+  when: ("ansible_service_mgr == 'systemd'")
 
 - name: "Ensure Alert manager configuration"
   ansible.builtin.template:

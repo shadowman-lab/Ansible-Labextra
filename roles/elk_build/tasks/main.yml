@@ -1,10 +1,10 @@
 ---
-- name: download and install elastic GPG key
+- name: Download and install elastic GPG key
   ansible.builtin.rpm_key:
     state=present
     key=https://artifacts.elastic.co/GPG-KEY-elasticsearch
 
-- name: create repo for elastic packages
+- name: Create repo for elastic packages
   ansible.builtin.yum_repository:
     name: elasticsearch
     description: Elastic 7.x Repo
@@ -32,17 +32,17 @@
     firewall-cmd --runtime-to-permanent
     systemctl restart firewalld
 
-- name: install OpenJDK 1.8.0
+- name: Install OpenJDK 1.8.0
   ansible.builtin.yum:
     name: java-1.8.0-openjdk
     state: present
 
-- name: install elasticsearch
+- name: Install elasticsearch
   ansible.builtin.yum:
     name: elasticsearch
     state: present
 
-- name: place elasticsearch config template
+- name: Place elasticsearch config template
   ansible.builtin.template:
     src: templates/elasticsearch.yml.j2
     dest: /etc/elasticsearch/elasticsearch.yml
@@ -50,33 +50,33 @@
     group: root
     mode: '0644'
 
-- name: set jvm minimum memory to 50%
+- name: Set jvm minimum memory to 50%
   ansible.builtin.lineinfile:
     dest: /etc/elasticsearch/jvm.options
     regexp: '^(.*)Xms(\d+)g(.*)$'
-    line: '\1Xms{{ (ansible_memtotal_mb*0.5) | int | abs }}m\3'
+    line: '\1Xms{{ (ansible_memtotal_mb * 0.5) | int | abs }}m\3'
     backrefs: true
 
-- name: set jvm maximum memory to 50%
+- name: Set jvm maximum memory to 50%
   ansible.builtin.lineinfile:
     dest: /etc/elasticsearch/jvm.options
     regexp: '^(.*)Xmx(\d+)g(.*)$'
-    line: '\1Xmx{{ (ansible_memtotal_mb*0.5) | int | abs }}m\3'
+    line: '\1Xmx{{ (ansible_memtotal_mb * 0.5) | int | abs }}m\3'
     backrefs: true
 
-- name: set vm.max_map_count to 262144
+- name: Set vm.max_map_count to 262144
   ansible.posix.sysctl:
     name: vm.max_map_count
     value: "262144"
     state: present
 
-- name: start elasticsearch service
+- name: Start elasticsearch service
   ansible.builtin.service:
     name: elasticsearch
     state: started
     enabled: true
 
-- name: validate that elasticsearch is up and available
+- name: Validate that elasticsearch is up and available
   ansible.builtin.uri:
     url: http://{{ ansible_default_ipv4.address }}:9200
     status_code: 200
@@ -85,7 +85,7 @@
   retries: 60
   delay: 2
 
-- name: install kibana
+- name: Install kibana
   ansible.builtin.yum:
     name: kibana
     state: present
@@ -105,38 +105,38 @@
     firewall-cmd --permanent --direct --add-rule ipv4 nat PREROUTING 1 -p tcp -d {{ ansible_default_ipv4.address }} --dport 443 -j REDIRECT --to-ports 5601
     firewall-cmd --permanent --direct --add-rule ipv6 nat PREROUTING 1 -p tcp -d {{ ansible_default_ipv4.address }} --dport 443 -j REDIRECT --to-ports 5601
 
-- name: set kibana server address
+- name: Set kibana server address
   ansible.builtin.lineinfile:
     dest: /etc/kibana/kibana.yml
     regexp: # server.name
     insertafter: "^#server.host"
     line: "server.host: \"{{ ansible_default_ipv4.address }}\""
 
-- name: set elasticsearch node address
+- name: Set elasticsearch node address
   ansible.builtin.lineinfile:
     dest: /etc/kibana/kibana.yml
     regexp: # elasticsearch.hosts
     insertafter: "^#elasticsearch.hosts"
     line: "elasticsearch.hosts: http://{{ ansible_default_ipv4.address }}:9200"
 
-- name: start kibana service
+- name: Start kibana service
   ansible.builtin.systemd:
     name: kibana
     state: started
     enabled: true
     daemon_reload: true
 
-- name: install OpenJDK 1.8.0
+- name: Install OpenJDK 1.8.0
   ansible.builtin.yum:
     name: java-1.8.0-openjdk
     state: present
 
-- name: install logstash
+- name: Install logstash
   ansible.builtin.yum:
     name: logstash
     state: present
 
-- name: place logstash processing template
+- name: Place logstash processing template
   ansible.builtin.template:
     src: templates/logstash.conf
     dest: /etc/logstash/conf.d/logstash.conf
@@ -145,20 +145,20 @@
     group: root
     mode: '0644'
 
-- name: set service listening address
+- name: Set service listening address
   ansible.builtin.lineinfile:
     dest: /etc/logstash/logstash.yml
     regexp: ^http.host
     insertafter: "^# http.host"
     line: "http.host: {{ ansible_default_ipv4.address | quote }}"
 
-- name: start logstash service
+- name: Start logstash service
   ansible.builtin.service:
     name: logstash
     state: started
     enabled: true
 
-- name: wait for service to begin listening
+- name: Wait for service to begin listening
   ansible.builtin.wait_for:
     port: 5055
     delay: 30
