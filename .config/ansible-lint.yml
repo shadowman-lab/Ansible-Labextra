@@ -20,3 +20,4 @@ warn_list:
   - var-spacing
   - name[casing]
   - no-shorthand
+  - key-order[task]
