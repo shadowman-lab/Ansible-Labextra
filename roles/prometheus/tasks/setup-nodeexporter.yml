@@ -69,6 +69,7 @@
     mode: '0644'
   when: ("ansible_service_mgr == 'systemd'")
   notify:
+    - "reload daemon"
     - "restart nodeexporter service"
 
 - name: "Ensure Node exporter service (systemd) is started and enabled"

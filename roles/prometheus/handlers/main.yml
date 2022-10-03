@@ -11,10 +11,18 @@
     name: "{{ alertmanager_service_name }}"
     state: restarted
 
-- name: "restart nodeexporter service"
+- name: Reload daemon systemd service
+  ansible.builtin.systemd:
+    name: "{{ nodeexporter_service_name }}"
+    daemon_reload: true
+    state: restarted
+  listen: "reload daemon"
+
+- name: Restart nodeexporter service
   ansible.builtin.service:
     name: "{{ nodeexporter_service_name }}"
     state: restarted
+  listen: "restart nodeexporter service"
 
 - name: restart_firewalld
   ansible.builtin.service:
