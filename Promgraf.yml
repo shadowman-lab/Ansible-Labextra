@@ -7,7 +7,7 @@
         - node_exporter
         - alertmanager
     - tower_scrape: 5m
-    - prometheus_version: 2.38.3
+    - prometheus_version: 2.38.0
     - alertmanager_version: 0.24.0
     - nodeexporter_version: 1.4.0
 
