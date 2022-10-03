@@ -71,6 +71,7 @@
   when: "ansible_service_mgr == 'systemd'"
   notify:
     - "restart prometheus daemon"
+    - "restart prometheus service"
 
 - name: "Ensure Prometheus service (systemd) is started and enabled"
   ansible.builtin.service:

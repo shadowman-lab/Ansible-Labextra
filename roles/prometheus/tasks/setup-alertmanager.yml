@@ -70,6 +70,7 @@
   when: "ansible_service_mgr == 'systemd'"
   notify:
     - "restart alertmanager daemon"
+    - "restart alertmanager service"
 
 - name: "Ensure Alert Manager service (systemd) is started and enabled"
   ansible.builtin.service:
