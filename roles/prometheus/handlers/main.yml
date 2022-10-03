@@ -1,22 +1,36 @@
 ---
 # handlers file for ansible-prometheus
 
+- name: Reload prometheus daemon systemd service
+  ansible.builtin.systemd:
+    name: "{{ prometheus_service_name }}"
+    daemon_reload: true
+    state: restarted
+  listen: "restart prometheus daemon"
+
 - name: "restart prometheus service"
   ansible.builtin.service:
     name: "{{ prometheus_service_name }}"
     state: restarted
+
+- name: Reload alertmanager daemon systemd service
+  ansible.builtin.systemd:
+    name: "{{ alertmanager_service_name }}"
+    daemon_reload: true
+    state: restarted
+  listen: "restart alertmanager daemon"
 
 - name: "restart alertmanager service"
   ansible.builtin.service:
     name: "{{ alertmanager_service_name }}"
     state: restarted
 
-- name: Reload daemon systemd service
+- name: Reload node exporter daemon systemd service
   ansible.builtin.systemd:
     name: "{{ nodeexporter_service_name }}"
     daemon_reload: true
     state: restarted
-  listen: "reload daemon"
+  listen: "reload nodeexporter daemon"
 
 - name: Restart nodeexporter service
   ansible.builtin.service:
