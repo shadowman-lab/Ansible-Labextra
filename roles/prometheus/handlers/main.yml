@@ -8,10 +8,11 @@
     state: restarted
   listen: "restart prometheus daemon"
 
-- name: "restart prometheus service"
+- name: Restart prometheus service
   ansible.builtin.service:
     name: "{{ prometheus_service_name }}"
     state: restarted
+  listen: "restart prometheus service"
 
 - name: Reload alertmanager daemon systemd service
   ansible.builtin.systemd:
@@ -20,10 +21,11 @@
     state: restarted
   listen: "restart alertmanager daemon"
 
-- name: "restart alertmanager service"
+- name: Restart Alert Manager Service
   ansible.builtin.service:
     name: "{{ alertmanager_service_name }}"
     state: restarted
+  listen: "restart alertmanager daemon"
 
 - name: Reload node exporter daemon systemd service
   ansible.builtin.systemd:
@@ -38,7 +40,8 @@
     state: restarted
   listen: "restart nodeexporter service"
 
-- name: restart_firewalld
+- name: Restart Firewalld
   ansible.builtin.service:
     name: firewalld
     state: restarted
+  listen: restart_firewalld
