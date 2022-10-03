@@ -51,11 +51,6 @@ scrape_configs:
     static_configs:
     - targets: ['tower2.shadowman.dev:9100']
 
-  - job_name: 'exporter.shadowman.dev'
-    scrape_interval: {{ tower_scrape }}
-    static_configs:
-    - targets: ['exporter.shadowman.dev:9100']
-
   # Scrape job for prometheus node exporter
   - job_name: 'promgraf.shadowman.dev'
     scrape_interval: {{ tower_scrape }}
