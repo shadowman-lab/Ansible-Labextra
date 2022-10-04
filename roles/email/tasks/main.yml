@@ -1,6 +1,6 @@
 ---
 - name: Send Web Link via E-mail
-  community.general.mail:
+  community.general.notification.mail:
     host: "{{ EMAIL_HOST }}"
     username: "{{ EMAIL_USERNAME }}"
     password: "{{ EMAIL_PASSWORD }}"
