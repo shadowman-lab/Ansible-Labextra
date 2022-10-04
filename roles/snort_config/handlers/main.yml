@@ -1,11 +1,13 @@
 ---
 # handlers file for snort-config
-- name: restart snort
+- name: Restart snort
   ansible.builtin.service:
     name: snort
     state: restarted
+  listen: restart snort
 
-- name: restart rsyslog
+- name: Restart rsyslog
   ansible.builtin.service:
     name: rsyslog
     state: restarted
+  listen: restart rsyslog

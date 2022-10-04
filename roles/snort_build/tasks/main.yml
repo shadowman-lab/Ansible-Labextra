@@ -89,6 +89,9 @@
       notify: systemctl daemon-reload
 
     - name: Handle ids_install_snort_community_rules_url
+      when: >
+        (ids_install_snort_community_rules_url is defined) and
+          ids_install_snort_community_rules_url | length | int > 0
       block:
         - name: Get ids_install_snort_community_rules_url rules
           ansible.builtin.get_url:
@@ -153,14 +156,14 @@
             group: root
             mode: '0644'
           when: (commr_st.stat.isdir is defined) and commr_st.stat.exists
-      when: >
-        (ids_install_snort_community_rules_url is defined) and
-          ids_install_snort_community_rules_url | length | int > 0
 
     # NOTE: Order matters, snort registered rules should "win" over community
     #       rules if/when there is ever a conflict in the content. Always copy
     #       registered content last
     - name: Handle ids_install_snort_registered_rules_url rules
+      when: >
+        (ids_install_snort_registered_rules_url is defined) and
+          ids_install_snort_registered_rules_url | length | int > 0
       block:
         - name: Get ids_install_snort_registered_rules_url rules
           ansible.builtin.get_url:
@@ -201,9 +204,6 @@
           when:
             - (st.stat.isdir is defined) and st.stat.isdir
             - item != "snort.conf"
-      when: >
-        (ids_install_snort_registered_rules_url is defined) and
-          ids_install_snort_registered_rules_url | length | int > 0
 
     # FIXME - this is kind of a hack
     - name: Ensure snort required files exist
@@ -221,6 +221,7 @@
         - /etc/snort/rules/local.rules
 
     - name: Block for snort
+      when: ids_install_snort_use_pulledpork
       block:
         - name: Ensure dirs exist as needed for pulledpork
           ansible.builtin.file:
@@ -234,7 +235,6 @@
           ansible.builtin.shell: "/usr/bin/pulledpork -c /etc/pulledpork/pulledpork.conf && /usr/bin/touch /etc/pulledpork/ran_pulled_pork"
           args:
             creates: /etc/pulledpork/ran_pulled_pork
-      when: ids_install_snort_use_pulledpork
 
 - name: Configure ids log normalization for provider snort
   when: "ids_provider == 'snort' and ids_install_snort_barnyard2_normalize_logs"

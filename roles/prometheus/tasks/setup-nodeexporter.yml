@@ -13,6 +13,7 @@
   register: nodeexporter_binary_stat
 
 - name: Block for node exporter
+  when: not nodeexporter_binary_stat.stat.exists
   block:
 
     - name: "Download Node exporter binaries"
@@ -37,8 +38,6 @@
       ansible.builtin.file:
         path: "/tmp/{{ prometheus_ne_archive }}"
         state: absent
-
-  when: not nodeexporter_binary_stat.stat.exists
 
 - name: "Ensure files permissions"
   ansible.builtin.file:

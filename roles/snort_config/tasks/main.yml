@@ -17,6 +17,7 @@
   notify: restart snort
 
 - name: Enable remote logging
+  when: (ids_config_remote_log is defined) and ids_config_remote_log
   block:
     - name: Apply rsyslog config
       ansible.builtin.template:
@@ -28,9 +29,9 @@
         mode: '0644'
       notify:
         - restart rsyslog
-  when: (ids_config_remote_log is defined) and ids_config_remote_log
 
 - name: Disable remote logging
+  when: (ids_config_remote_log is defined) and not ids_config_remote_log
   block:
     - name: Check for rsyslog config
       ansible.builtin.stat:
@@ -55,8 +56,6 @@
       when: st.stat.exists
       notify:
         - restart rsyslog
-
-  when: (ids_config_remote_log is defined) and not ids_config_remote_log
 
 - name: Ensure snort is started and enabled
   ansible.builtin.service:
