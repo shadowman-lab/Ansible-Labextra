@@ -20,7 +20,6 @@
     - name: Include grafana role
       ansible.builtin.include_role:
         name: lrk.grafana
-      notify: restart_firewalld
 
     - name: Open Firewalld for grafana
       ansible.posix.firewalld:
