@@ -2,8 +2,8 @@
 - name: Install Grafana
   hosts: all
   vars:
-    __grafana_yum_repository_url: https://packages.grafana.com/oss/rpm
-    __grafana_yum_repository_gpgkey: https://packages.grafana.com/gpg.key
+    - __grafana_yum_repository_url: https://packages.grafana.com/oss/rpm
+    - __grafana_yum_repository_gpgkey: https://packages.grafana.com/gpg.key
 
 # If issues arise with grafana yum install, then manually install
 # update /etc/yum.repos.d/grafana.repo to the info below
