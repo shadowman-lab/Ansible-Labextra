@@ -18,11 +18,10 @@
 # sslcacert=/etc/pki/tls/certs/ca-bundle.crt
 # Then run yum install grafana
 
-  tasks:
+  roles:
+    - lrk.grafana
 
-    - name: Include grafana role
-      ansible.builtin.include_role:
-        name: lrk.grafana
+  tasks:
 
     - name: Open Firewalld for grafana
       ansible.posix.firewalld:
