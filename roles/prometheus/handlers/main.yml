@@ -25,7 +25,7 @@
   ansible.builtin.service:
     name: "{{ alertmanager_service_name }}"
     state: restarted
-  listen: "restart alertmanager daemon"
+  listen: "restart alertmanager service"
 
 - name: Reload node exporter daemon systemd service
   ansible.builtin.systemd:
