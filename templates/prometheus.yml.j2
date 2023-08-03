@@ -25,7 +25,7 @@ rule_files:
 
 scrape_configs:
 
-  # Scrape job for prometheus himself
+  # Scrape job for prometheus
   - job_name: 'prometheus'
     static_configs:
     - targets: ['{{ inventory_hostname }}:9090']
@@ -51,11 +51,11 @@ scrape_configs:
     static_configs:
     - targets: ['tower2.shadowman.dev:9100']
 
-  # Scrape job for prometheus node exporter
-  - job_name: 'promgraf.shadowman.dev'
+  # Scrape job for rhel8 node exporter
+  - job_name: 'rhel8.shadowman.dev'
     scrape_interval: {{ tower_scrape }}
     static_configs:
-    - targets: ['{{ inventory_hostname }}:9100']
+    - targets: ['rhel8.shadowman.dev:9100']
 
 #  # The labels to add to any time series or alerts when communicating with
 #  # external systems (federation, remote storage, Alertmanager).

@@ -1,0 +1,11 @@
+groups:
+- name: selinux-rules
+  rules:
+  - alert: SELINUX Disabled
+    expr: node_selinux_current_mode == 0
+    for: {{tower_scrape}}
+    labels:
+      severity: critical
+    annotations:
+      description: 'SELINUX Disabled for {% raw %}{{ $labels.job }}{% endraw %}.'
+      summary: 'SELINUX Disabled (instance: {% raw %}{{ $labels.job }}{% endraw %})'
