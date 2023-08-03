@@ -35,6 +35,12 @@
       dest: /etc/prometheus/rules/exporter-rules.yml
     notify: restart_prometheus
 
+  - name: Updated selinux-rules
+    ansible.builtin.template:
+      src: templates/selinux-rules.yml.j2
+      dest: /etc/prometheus/rules/selinux-rules.yml
+    notify: restart_prometheus
+
   handlers:
     - name: restart_prometheus
       ansible.builtin.service:
