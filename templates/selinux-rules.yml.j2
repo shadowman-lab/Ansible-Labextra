@@ -1,7 +1,7 @@
 groups:
 - name: selinux-rules
   rules:
-  - alert: SELINUX Disabled
+  - alert: SELinuxDisabled
     expr: node_selinux_current_mode == 0
     for: {{tower_scrape}}
     labels:
