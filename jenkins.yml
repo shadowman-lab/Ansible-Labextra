@@ -1,0 +1,7 @@
+---
+- name: Configure Jenkins job
+  hosts: localhost
+  gather_facts: false
+
+  roles:
+    - jenkins_setup

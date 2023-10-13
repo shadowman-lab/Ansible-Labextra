@@ -1,0 +1,9 @@
+---
+- name: Create a jenkins job using basic authentication
+  community.general.jenkins_job:
+    config: "{{ lookup('file', 'files/shadowman.xml') }}"
+    name: "{{ jenkins_job_name }}"
+    user: "{{ student_user }}"
+    password: "{{ student_password }}"
+    url: "{{ jenkins_url }}"
+    validate_certs: false

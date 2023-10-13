@@ -1,0 +1,3 @@
+---
+jenkins_url: "https://cicd.shadowman.dev:8083"
+jenkins_job_name: "Shadowman"
