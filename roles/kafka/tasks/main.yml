@@ -46,8 +46,8 @@
 
 - name: Download Kafka tools
   ansible.builtin.get_url:
-    url: https://downloads.apache.org/kafka/3.6.0/kafka_2.13-3.6.0.tgz -O /opt/kafka_2.13-3.6.0.tgz
-    dest: /opt/kafka_2.13-3.6.0.tgz
+    url: 'https://downloads.apache.org/kafka/3.6.0/kafka_2.13-3.6.0.tgz'
+    dest: '/opt/kafka_2.13-3.6.0.tgz'
     mode: '0644'
 
 - name: Extract kafka tar
