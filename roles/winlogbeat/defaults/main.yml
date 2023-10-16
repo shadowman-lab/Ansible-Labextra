@@ -1,7 +1,7 @@
 ---
 winlogbeat_download_url_base: 'https://artifacts.elastic.co/downloads/beats/winlogbeat'
 file_ext: '.zip'
-winlogbeat_download_file: 'winlogbeat-8.10.-windows-x86_64'
+winlogbeat_download_file: 'winlogbeat-8.10.3-windows-x86_64'
 winlogbeat_install_location: "C:/Program Files/Winlogbeat"
 winlogbeat_event_logs:
   - name: Application
