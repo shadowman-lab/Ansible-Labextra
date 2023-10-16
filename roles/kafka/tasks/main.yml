@@ -52,8 +52,8 @@
 
 - name: Extract kafka tar
   ansible.builtin.unarchive:
-    src: /opt/kafka_2.13-3.6.0.tgz
-    dest: /opt/kafka
+    src: '/opt/kafka_2.13-3.6.0.tgz'
+    dest: '/opt/kafka'
 
 - name: Create Kafka topic
   ansible.builtin.command: "/opt/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic {{ topic }}"
