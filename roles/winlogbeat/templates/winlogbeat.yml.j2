@@ -42,7 +42,7 @@ setup.kibana:
 output.kafka:
   hosts: ["{{ kafkahost }}"]
 
-  topic: 'windowslogs'
+  topic: '{{ kafkatopic }}'
   partition.round_robin:
     reachable_only: false
 
