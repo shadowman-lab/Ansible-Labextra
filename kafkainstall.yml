@@ -1,6 +1,7 @@
 ---
 - name: Install Kafka via Podman
   hosts: all
+  gather_facts: false
 
   roles:
     - kafka

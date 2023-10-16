@@ -1,6 +1,7 @@
 ---
 - name: Install Winglogbeat
   hosts: all
+  gather_facts: false
 
   roles:
     - winlogbeat
