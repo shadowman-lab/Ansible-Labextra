@@ -1,4 +1,11 @@
 ---
+- name: Ensure podman and podman plugins is installed
+  ansible.builtin.dnf:
+    name:
+      - podman
+      - podman-plugins
+    state: present
+
 - name: Ensure "messaging" network exists
   containers.podman.podman_network:
     name: messaging
