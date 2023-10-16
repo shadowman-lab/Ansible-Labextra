@@ -44,8 +44,6 @@
     state: enabled
   notify: "Restart Firewalld"
 
-- name: Download Kafka tools
-
 - name: Extract kafka tar
   ansible.builtin.unarchive:
     src: 'https://downloads.apache.org/kafka/3.6.0/kafka_2.13-3.6.0.tgz'
