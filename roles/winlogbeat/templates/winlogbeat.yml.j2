@@ -1,11 +1,43 @@
 ---
+###################### Winlogbeat Configuration  ########################
 
-# Events
+# ======================== Winlogbeat specific options =========================
+
+# event_logs specifies a list of event logs to monitor as well as any
+# accompanying options. The YAML data type of event_logs is a list of
+# dictionaries.
+
 winlogbeat.event_logs:
-  {{ winlogbeat_event_logs | to_json }}
+  - name: Application
+    ignore_older: 72h
+
+  - name: Security
+
+  - name: System
+
+  - name: Microsoft-Windows-Sysmon/Operational
+
+  - name: Windows PowerShell
+    event_id: 400, 403, 600, 800
+
+  - name: Microsoft-Windows-PowerShell/Operational
+    event_id: 4103, 4104, 4105, 4106
+
+  - name: ForwardedEvents
+    tags: [forwarded]
+
+  # ====================== Elasticsearch template settings =======================
 
 setup.template.settings:
   index.number_of_shards: 1
+
+# =================================== Kibana ===================================
+
+# Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.
+# This requires a Kibana endpoint configuration.
+setup.kibana:
+
+# ------------------------------ Kibana Output -------------------------------
 
 output.kafka:
   hosts: ["{{ kafkahost }}"]
@@ -17,6 +49,8 @@ output.kafka:
   required_acks: 1
   compression: gzip
   max_message_tyes: 10000000
+
+# ================================= Processors =================================
 
 processors:
   - add_host_metadata:
