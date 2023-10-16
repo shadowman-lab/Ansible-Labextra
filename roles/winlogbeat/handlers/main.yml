@@ -1,0 +1,5 @@
+---
+- name: Restart winlogbeat
+  ansible.windows.win_service:
+    name: winlogbeat
+    state: restarted

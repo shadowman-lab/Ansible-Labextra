@@ -1,0 +1,18 @@
+---
+winlogbeat_download_url_base: 'https://artifacts.elastic.co/downloads/beats/winlogbeat'
+file_ext: '.zip'
+winlogbeat_download_file: 'winlogbeat-8.10.-windows-x86_64'
+winlogbeat_install_location: "C:/Program Files/Winlogbeat"
+winlogbeat_event_logs:
+  - name: Application
+    ignore_older: 72h
+  - name: Security
+  - name: System
+  - name: Microsoft-Windows-Sysmon/Operational
+  - name: Windows PowerShell
+    event_id: 400, 403, 600, 800
+  - name: Microsoft-Windows-PowerShell/Operational
+    event_id: 4103, 4104, 4105, 4106
+  - name: ForwardedEvents
+    tags: [forwarded]
+kafkahost: "192.168.89.155:9092"
