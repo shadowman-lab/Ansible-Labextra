@@ -51,4 +51,6 @@
     remote_src: true
 
 - name: Create Kafka topic
-  ansible.builtin.command: "/opt/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic {{ topic }}"
+  ansible.builtin.command: "/opt/kafka_2.13-3.6.0/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic {{ topic }}"
+  register: kafkatopic
+  changed_when: kafkatopic.stdout == "Created topic {{ topic }}."
