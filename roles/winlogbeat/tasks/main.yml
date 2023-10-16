@@ -3,34 +3,48 @@
   ansible.windows.win_service:
     name: winlogbeat
     state: absent
+  tags:
+    - remove
 
 - name: Remove any previous winlogbeat
   ansible.windows.win_file:
     path: "{{ winlogbeat_install_location }}"
     state: absent
+  tags:
+    - remove
 
 - name: Recreate directory
   ansible.windows.win_file:
     path: "{{ winlogbeat_install_location }}"
     state: directory
+  tags:
+    - create
 
 - name: Get winlogbeat zip
   ansible.windows.win_get_url:
     url: "{{ winlogbeat_download_url_base }}/{{ winlogbeat_download_file }}{{ file_ext }}"
     dest: "{{ winlogbeat_install_location }}/{{ winlogbeat_download_file }}{{ file_ext }}"
+  tags:
+    - create
 
 - name: Unzip winlogbeat
   community.windows.win_unzip:
     src: "{{ winlogbeat_install_location }}/{{ winlogbeat_download_file }}{{ file_ext }}"
     dest: "{{ winlogbeat_install_location }}"
+  tags:
+    - create
 
 - name: Install the service via script
   ansible.windows.win_command: powershell.exe -ExecutionPolicy ByPass -File "{{ winlogbeat_install_location }}/{{ winlogbeat_download_file }}/install-service-winlogbeat.ps1"
   args:
     chdir: "{{ winlogbeat_install_location }}/{{ winlogbeat_download_file }}"
+  tags:
+    - create
 
 - name: Copy WinLogBeat configuration.
   ansible.windows.win_template:
     src: winlogbeat.yml.j2
     dest: "{{ winlogbeat_install_location }}/{{ winlogbeat_download_file }}/winlogbeat.yml"
   notify: Restart winlogbeat
+  tags:
+    - create
