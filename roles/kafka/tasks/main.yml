@@ -45,15 +45,12 @@
   notify: "Restart Firewalld"
 
 - name: Download Kafka tools
-  ansible.builtin.get_url:
-    url: 'https://downloads.apache.org/kafka/3.6.0/kafka_2.13-3.6.0.tgz'
-    dest: '/opt/kafka_2.13-3.6.0.tgz'
-    mode: '0644'
 
 - name: Extract kafka tar
   ansible.builtin.unarchive:
-    src: '/opt/kafka_2.13-3.6.0.tgz'
+    src: 'https://downloads.apache.org/kafka/3.6.0/kafka_2.13-3.6.0.tgz'
     dest: '/opt/kafka'
+    remote_src: true
 
 - name: Create Kafka topic
   ansible.builtin.command: "/opt/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic {{ topic }}"
