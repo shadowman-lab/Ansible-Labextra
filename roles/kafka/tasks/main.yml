@@ -47,7 +47,7 @@
 - name: Extract kafka tar
   ansible.builtin.unarchive:
     src: 'https://downloads.apache.org/kafka/3.6.0/kafka_2.13-3.6.0.tgz'
-    dest: '/opt/kafka'
+    dest: '/opt'
     remote_src: true
 
 - name: Create Kafka topic
