@@ -1,0 +1,6 @@
+---
+- name: Install Kafka via Podman
+  hosts: all
+
+  roles:
+    - kafka

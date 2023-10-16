@@ -1,0 +1,6 @@
+---
+- name: Install Winglogbeat
+  hosts: all
+
+  roles:
+    - winlogbeats
