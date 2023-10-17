@@ -7,6 +7,23 @@
       - java
     state: present
 
+- name: Open Firewalld for Kafka
+  ansible.posix.firewalld:
+    port: 9092/tcp
+    permanent: true
+    state: enabled
+  notify: "Restart Firewalld"
+
+- name: Open Firewalld for ZooKeeper
+  ansible.posix.firewalld:
+    port: 2181/tcp
+    permanent: true
+    state: enabled
+  notify: "Restart Firewalld"
+
+- name: Force all notified handlers to run at this point
+  ansible.builtin.meta: flush_handlers
+
 - name: Ensure "messaging" network exists
   containers.podman.podman_network:
     name: messaging
@@ -36,13 +53,6 @@
     ports:
       - "9092:9092"
     network: messaging
-
-- name: Open Firewalld for Kafka
-  ansible.posix.firewalld:
-    port: 9092/tcp
-    permanent: true
-    state: enabled
-  notify: "Restart Firewalld"
 
 - name: Extract kafka tar
   ansible.builtin.unarchive:
