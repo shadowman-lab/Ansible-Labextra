@@ -125,6 +125,15 @@
       router_logging: false
       serve_from_sub_path: false
 
+  pre_tasks:
+  
+    - name: Open Firewalld for grafana
+      ansible.posix.firewalld:
+        port: 3000/tcp
+        permanent: true
+        state: enabled
+      notify: restart_firewalld
+
   roles:
     - prometheus.prometheus.prometheus
     - prometheus.prometheus.alertmanager
@@ -181,13 +190,6 @@
     - name: Open Firewalld for prometheus
       ansible.posix.firewalld:
         port: 9090/tcp
-        permanent: true
-        state: enabled
-      notify: restart_firewalld
-
-    - name: Open Firewalld for grafana
-      ansible.posix.firewalld:
-        port: 3000/tcp
         permanent: true
         state: enabled
       notify: restart_firewalld
