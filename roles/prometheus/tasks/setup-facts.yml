@@ -12,12 +12,12 @@
 
 - name: "Set prometheus daemon directory fact"
   ansible.builtin.set_fact:
-    prometheus_daemon_dir: "{{ prometheus_path_install }}/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}"
+    prometheus_daemon_dir: "/usr/local/bin"
   when: '"prometheus" in prometheus_components'
 
 - name: "Set alertmanager daemon directory fact"
   ansible.builtin.set_fact:
-    alertmanager_daemon_dir: "{{ prometheus_path_install }}/alertmanager-{{ alertmanager_version }}.{{ prometheus_platform_suffix }}"
+    alertmanager_daemon_dir: "/usr/local/bin"
   when: '"alertmanager" in prometheus_components'
 
 - name: "Set node exporter daemon directory fact"

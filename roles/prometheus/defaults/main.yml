@@ -9,7 +9,7 @@ prometheus_group: prometheus
 prometheus_user: prometheus
 
 # Prometheus install path
-prometheus_path_install: /opt/prometheus
+prometheus_path_install: /usr/local/bin/prometheus
 # Prometheus configuration path
 prometheus_path_config: /etc/prometheus
 # Prometheus logs path
