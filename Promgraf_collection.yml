@@ -125,24 +125,6 @@
       router_logging: false
       serve_from_sub_path: false
 
-  pre_tasks:
-    
-    - name: Copy Cert for grafana
-      ansible.builtin.copy:
-        src: /certs/shadowman_cert.cer
-        dest: /etc/grafana/shadowman_cert.cer
-        owner: grafana
-        group: grafana
-        mode: '0644'
-
-    - name: Copy Key for grafana
-      ansible.builtin.copy:
-        src: /certs/shadowman_private.key
-        dest: /etc/grafana/shadowman_private.key
-        owner: grafana
-        group: grafana
-        mode: '0644'
-
   roles:
     - prometheus.prometheus.prometheus
     - prometheus.prometheus.alertmanager
@@ -163,6 +145,23 @@
         dest: /certs/shadowman_private.key
         owner: root
         group: root
+        mode: '0644'
+
+    - name: Copy Cert for grafana
+      ansible.builtin.copy:
+        src: /certs/shadowman_cert.cer
+        dest: /etc/grafana/shadowman_cert.cer
+        owner: grafana
+        group: grafana
+        mode: '0644'
+      notify: restart_grafana
+
+    - name: Copy Key for grafana
+      ansible.builtin.copy:
+        src: /certs/shadowman_private.key
+        dest: /etc/grafana/shadowman_private.key
+        owner: grafana
+        group: grafana
         mode: '0644'
 
     - name: Install httpd
@@ -218,3 +217,9 @@
         name: httpd
         state: started
         enabled: true
+
+    - name: "Restart grafana"
+      ansible.builtin.service:
+        name: grafana-server
+        state: restarted
+      listen: "restart_grafana"
