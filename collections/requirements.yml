@@ -1,13 +1,5 @@
 collections:
 
-  - name: ansible.posix
+  - name: prometheus.prometheus
 
-  - name: ansible.tower
-
-  - name: ansible.netcommon
-
-  - name: google.cloud
-
-  - name: community.kubernetes
-
-  - name: community.general
+  - name: grafana.grafana
