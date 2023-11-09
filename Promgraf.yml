@@ -9,7 +9,7 @@
     - tower_scrape: 5m
     - prometheus_version: 2.47.2
     - alertmanager_version: 0.26.0
-    - nodeexporter_version: 1.4.0
+    - nodeexporter_version: 1.6.1
 
 # If issues arise with grafana yum install, then manually install
 # update /etc/yum.repos.d/grafana.repo to the info below

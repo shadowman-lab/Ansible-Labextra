@@ -34,13 +34,12 @@ route:
   group_wait: 5s
   group_interval: 10s
   repeat_interval: 3h
-  receiver: 'snow'
+  receiver: 'EDA'
 
 receivers:
-  - name: 'snow'
+  - name: 'EDA'
     webhook_configs:
-    - url: "http://localhost:9877/webhook"
-#    - url: "http://eda.shadowman.dev:8000/endpoint"
+    - url: "http://eda.shadowman.dev:8000/endpoint"
       send_resolved: false
 
 

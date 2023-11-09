@@ -29,7 +29,8 @@
     - name: "Expand Alert Manager binaries"
       ansible.builtin.unarchive:
         src: "/tmp/{{ prometheus_am_archive }}"
-        dest: "{{ prometheus_path_install }}"
+        dest: "/tmp"
+        creates: "/tmp/alertmanager-{{ alertmanager_version }}.{{ prometheus_platform_suffix }}"
         owner: "{{ prometheus_user }}"
         group: "{{ prometheus_group }}"
         copy: false
@@ -38,6 +39,19 @@
       ansible.builtin.file:
         path: "/tmp/{{ prometheus_am_archive }}"
         state: absent
+
+    - name: Propagate official alertmanager and amtool binaries
+      ansible.builtin.copy:
+        src: "/tmp/alertmanager-{{ alertmanager_version }}.linux-{{ go_arch }}/{{ item }}"
+        dest: "{{ _alertmanager_binary_install_dir }}/{{ item }}"
+        mode: 0755
+        owner: root
+        group: root
+      with_items:
+        - alertmanager
+        - amtool
+      notify:
+        - "restart alertmanager service"
 
 - name: "Ensure files permissions"
   ansible.builtin.file:
@@ -81,7 +95,7 @@
 - name: "Ensure Alert manager configuration"
   ansible.builtin.template:
     src: "alertmanager.yml.j2"
-    dest: "{{ prometheus_path_config }}/alertmanager.yml"
+    dest: "{{ alertmanager_path_config }}/alertmanager.yml"
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
     mode: "u=rw,g=,o="

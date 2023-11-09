@@ -8,8 +8,9 @@ After=network-online.target
 User=root
 Restart=on-failure
 RestartSec=10
-ExecStart={{ prometheus_daemon_dir }}/prometheus \
+ExecStart={{ prometheus_path_install }} \
               --config.file={{ prometheus_path_config }}/prometheus.yml \
+              --web.config.file={{ prometheus_path_config }}/web.yml \
 
 [Install]
 WantedBy=multi-user.target

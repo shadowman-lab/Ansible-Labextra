@@ -7,8 +7,11 @@ After=network-online.target
 User=root
 Restart=on-failure
 RestartSec=10
-ExecStart={{ alertmanager_daemon_dir }}/alertmanager \
-              --config.file={{ prometheus_path_config }}/alertmanager.yml \
-              --web.external-url http://promgraf.shadowman.dev:9093
+ExecStart={{ _alertmanager_binary_install_dir }}/alertmanager \
+              --config.file={{ alertmanager_path_config }}/alertmanager.yml \
+              --web.config.file={{ alertmanager_path_config }}/web.yml \
+              --web.external-url http://{{ inventory_hostname }}:9093
+WorkingDirectory={{ alertmanager_path_config }}
+
 [Install]
 WantedBy=multi-user.target

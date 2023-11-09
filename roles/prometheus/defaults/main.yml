@@ -12,6 +12,7 @@ prometheus_user: prometheus
 prometheus_path_install: /usr/local/bin/prometheus
 # Prometheus configuration path
 prometheus_path_config: /etc/prometheus
+alertmanager_path_config: /etc/alertmanager
 # Prometheus logs path
 prometheus_path_log: /var/log/prometheus
 # Prometheus PID path
@@ -22,6 +23,8 @@ prometheus_path_data: /var/lib/prometheus
 prometheus_path_rules: "{{ prometheus_path_config }}/rules"
 # Prometheus file sd config path:
 prometheus_path_file_sd_config: "{{ prometheus_path_config }}/tgroups"
+
+_prometheus_binary_install_dir: '/usr/local/bin'
 
 # Prometheus components to install
 # Can be a mix of:
@@ -90,6 +93,7 @@ alertmanager_smtp_auth_secret: null
 alertmanager_smtp_auth_identity: null
 # The default SMTP TLS requirement. default: false
 alertmanager_smtp_require_tls: false
+_alertmanager_binary_install_dir: '/usr/local/bin'
 
 # Slack API url. default empty
 alertmanager_slack_api_url: null

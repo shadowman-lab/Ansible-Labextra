@@ -29,7 +29,8 @@
     - name: "Expand Prometheus binaries"
       ansible.builtin.unarchive:
         src: "/tmp/{{ prometheus_prom_archive }}"
-        dest: "{{ prometheus_path_install }}"
+        dest: "/tmp"
+        creates: /tmp/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}/prometheus"
         owner: "{{ prometheus_user }}"
         group: "{{ prometheus_group }}"
         copy: false
@@ -38,6 +39,32 @@
       ansible.builtin.file:
         path: "/tmp/{{ prometheus_prom_archive }}"
         state: absent
+
+    - name: Propagate official prometheus and promtool binaries
+      ansible.builtin.copy:
+        src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch }}/{{ item }}"
+        dest: "{{ _prometheus_binary_install_dir }}/{{ item }}"
+        mode: '0755'
+        owner: root
+        group: root
+      with_items:
+        - prometheus
+        - promtool
+      notify:
+        - restart prometheus service
+
+    - name: Propagate official console templates
+      ansible.builtin.copy:
+        src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch }}/{{ item }}/"
+        dest: "{{ prometheus_config_dir }}/{{ item }}/"
+        mode: '0644'
+        owner: root
+        group: root
+      with_items:
+        - console_libraries
+        - consoles
+      notify:
+        - restart prometheus service
 
 - name: "Ensure files permissions"
   ansible.builtin.file:
