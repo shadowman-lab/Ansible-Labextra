@@ -31,6 +31,39 @@
 - name: "Set role facts"
   ansible.builtin.include_tasks: setup-facts.yml
 
+- name: Discover latest version of prometheus
+  ansible.builtin.set_fact:
+    prometheus_version: "{{ (lookup('url', 'https://api.github.com/repos/prometheus/prometheus/releases/latest', headers=_github_api_headers,
+                         split_lines=False) | from_json).get('tag_name') | replace('v', '') }}"
+  run_once: true
+  until: prometheus_version is version('0.0.0', '>=')
+  retries: 10
+  when:
+    - prometheus_version == "latest"
+    - '"prometheus" in prometheus_components'
+
+- name: Discover latest version of alertmanager
+  ansible.builtin.set_fact:
+    alertmanager_version: "{{ (lookup('url', 'https://api.github.com/repos/prometheus/alertmanager/releases/latest', headers=_github_api_headers,
+                           split_lines=False) | from_json).get('tag_name') | replace('v', '') }}"
+  run_once: true
+  until: alertmanager_version is version('0.0.0', '>=')
+  retries: 10
+  when:
+    - alertmanager_version == "latest"
+    - '"alertmanager" in prometheus_components'
+
+- name: Discover latest version of node exporter
+  ansible.builtin.set_fact:
+    nodeexporter_version: "{{ (lookup('url', 'https://api.github.com/repos/prometheus/node_exporter/releases/latest', headers=_github_api_headers,
+                            split_lines=False) | from_json).get('tag_name') | replace('v', '') }}"
+  run_once: true
+  until: nodeexporter_version is version('0.0.0', '>=')
+  retries: 10
+  when:
+    - nodeexporter_version == "latest"
+    - '"node_exporter" in prometheus_components'
+
 - name: "Install Node Exporter"
   ansible.builtin.include_tasks: setup-nodeexporter.yml
   when: '"node_exporter" in prometheus_components'

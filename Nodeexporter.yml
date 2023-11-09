@@ -4,7 +4,7 @@
   vars:
     - prometheus_components:
         - node_exporter
-    - nodeexporter_version: 1.6.1
+    - nodeexporter_version: latest
 
   roles:
     - prometheus
