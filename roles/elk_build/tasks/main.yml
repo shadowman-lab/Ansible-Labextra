@@ -48,20 +48,20 @@
     dest: /etc/elasticsearch/elasticsearch.yml
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
 
 - name: Set jvm minimum memory to 50%
   ansible.builtin.lineinfile:
     dest: /etc/elasticsearch/jvm.options
-    regexp: '^(.*)Xms(\d+)g(.*)$'
-    line: '\1Xms{{ (ansible_memtotal_mb * 0.5) | int | abs }}m\3'
+    regexp: ^(.*)Xms(\d+)g(.*)$
+    line: \1Xms{{ (ansible_memtotal_mb * 0.5) | int | abs }}m\3
     backrefs: true
 
 - name: Set jvm maximum memory to 50%
   ansible.builtin.lineinfile:
     dest: /etc/elasticsearch/jvm.options
-    regexp: '^(.*)Xmx(\d+)g(.*)$'
-    line: '\1Xmx{{ (ansible_memtotal_mb * 0.5) | int | abs }}m\3'
+    regexp: ^(.*)Xmx(\d+)g(.*)$
+    line: \1Xmx{{ (ansible_memtotal_mb * 0.5) | int | abs }}m\3
     backrefs: true
 
 - name: Set vm.max_map_count to 262144
@@ -109,14 +109,14 @@
   ansible.builtin.lineinfile:
     dest: /etc/kibana/kibana.yml
     regexp: # server.name
-    insertafter: "^#server.host"
-    line: "server.host: \"{{ ansible_default_ipv4.address }}\""
+    insertafter: ^#server.host
+    line: 'server.host: "{{ ansible_default_ipv4.address }}"'
 
 - name: Set elasticsearch node address
   ansible.builtin.lineinfile:
     dest: /etc/kibana/kibana.yml
     regexp: # elasticsearch.hosts
-    insertafter: "^#elasticsearch.hosts"
+    insertafter: ^#elasticsearch.hosts
     line: "elasticsearch.hosts: http://{{ ansible_default_ipv4.address }}:9200"
 
 - name: Start kibana service
@@ -143,13 +143,13 @@
     force: true
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
 
 - name: Set service listening address
   ansible.builtin.lineinfile:
     dest: /etc/logstash/logstash.yml
     regexp: ^http.host
-    insertafter: "^# http.host"
+    insertafter: ^# http.host
     line: "http.host: {{ ansible_default_ipv4.address | quote }}"
 
 - name: Start logstash service

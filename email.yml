@@ -1,3 +1,4 @@
+---
 - name: Send an e-mail
   hosts: all
   gather_facts: false

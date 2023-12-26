@@ -5,41 +5,41 @@
 
   tasks:
 
-  - name: Updated prometheus config
-    ansible.builtin.template:
-      src: templates/prometheus.yml.j2
-      dest: /etc/prometheus/prometheus.yml
-    notify: restart_prometheus
+    - name: Updated prometheus config
+      ansible.builtin.template:
+        src: templates/prometheus.yml.j2
+        dest: /etc/prometheus/prometheus.yml
+      notify: restart_prometheus
 
-  - name: Updated cpu-alert rules
-    ansible.builtin.template:
-      src: templates/cpu-rules.yml.j2
-      dest: /etc/prometheus/rules/cpu-rules.yml
-    notify: restart_prometheus
+    - name: Updated cpu-alert rules
+      ansible.builtin.template:
+        src: templates/cpu-rules.yml.j2
+        dest: /etc/prometheus/rules/cpu-rules.yml
+      notify: restart_prometheus
 
-  - name: Updated disk-rules
-    ansible.builtin.template:
-      src: templates/disk-rules.yml.j2
-      dest: /etc/prometheus/rules/disk-rules.yml
-    notify: restart_prometheus
+    - name: Updated disk-rules
+      ansible.builtin.template:
+        src: templates/disk-rules.yml.j2
+        dest: /etc/prometheus/rules/disk-rules.yml
+      notify: restart_prometheus
 
-  - name: Updated mem-rules
-    ansible.builtin.template:
-      src: templates/mem-rules.yml.j2
-      dest: /etc/prometheus/rules/mem-rules.yml
-    notify: restart_prometheus
+    - name: Updated mem-rules
+      ansible.builtin.template:
+        src: templates/mem-rules.yml.j2
+        dest: /etc/prometheus/rules/mem-rules.yml
+      notify: restart_prometheus
 
-  - name: Updated exporter-rules
-    ansible.builtin.template:
-      src: templates/exporter-rules.yml.j2
-      dest: /etc/prometheus/rules/exporter-rules.yml
-    notify: restart_prometheus
+    - name: Updated exporter-rules
+      ansible.builtin.template:
+        src: templates/exporter-rules.yml.j2
+        dest: /etc/prometheus/rules/exporter-rules.yml
+      notify: restart_prometheus
 
-  - name: Updated selinux-rules
-    ansible.builtin.template:
-      src: templates/selinux-rules.yml.j2
-      dest: /etc/prometheus/rules/selinux-rules.yml
-    notify: restart_prometheus
+    - name: Updated selinux-rules
+      ansible.builtin.template:
+        src: templates/selinux-rules.yml.j2
+        dest: /etc/prometheus/rules/selinux-rules.yml
+      notify: restart_prometheus
 
   handlers:
     - name: restart_prometheus

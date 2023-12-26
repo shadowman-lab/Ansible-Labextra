@@ -6,39 +6,39 @@
     name: "{{ prometheus_service_name }}"
     daemon_reload: true
     state: restarted
-  listen: "restart prometheus daemon"
+  listen: restart prometheus daemon
 
 - name: Restart prometheus service
   ansible.builtin.service:
     name: "{{ prometheus_service_name }}"
     state: restarted
-  listen: "restart prometheus service"
+  listen: restart prometheus service
 
 - name: Reload alertmanager daemon systemd service
   ansible.builtin.systemd:
     name: "{{ alertmanager_service_name }}"
     daemon_reload: true
     state: restarted
-  listen: "restart alertmanager daemon"
+  listen: restart alertmanager daemon
 
 - name: Restart Alert Manager Service
   ansible.builtin.service:
     name: "{{ alertmanager_service_name }}"
     state: restarted
-  listen: "restart alertmanager service"
+  listen: restart alertmanager service
 
 - name: Reload node exporter daemon systemd service
   ansible.builtin.systemd:
     name: "{{ nodeexporter_service_name }}"
     daemon_reload: true
     state: restarted
-  listen: "reload nodeexporter daemon"
+  listen: reload nodeexporter daemon
 
 - name: Restart nodeexporter service
   ansible.builtin.service:
     name: "{{ nodeexporter_service_name }}"
     state: restarted
-  listen: "restart nodeexporter service"
+  listen: restart nodeexporter service
 
 - name: Restart Firewalld
   ansible.builtin.service:

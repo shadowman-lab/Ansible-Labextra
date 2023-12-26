@@ -24,7 +24,7 @@ prometheus_path_rules: "{{ prometheus_path_config }}/rules"
 # Prometheus file sd config path:
 prometheus_path_file_sd_config: "{{ prometheus_path_config }}/tgroups"
 
-_prometheus_binary_install_dir: '/usr/local/bin'
+_prometheus_binary_install_dir: /usr/local/bin
 
 # Prometheus components to install
 # Can be a mix of:
@@ -32,9 +32,8 @@ _prometheus_binary_install_dir: '/usr/local/bin'
 #   - node_exporter
 #   - alertmanager
 prometheus_components: []
-
 # Set the jinja2 template file to use instead of the provided one. Path based on playbook_dir
-prometheus_config_template: null
+prometheus_config_template:
 
 # Prometheus version
 prometheus_version: 1.7.1
@@ -44,7 +43,7 @@ prometheus_service_name: prometheus
 
 # Address to bind on, default :9090
 prometheus_listen_port: 9090
-prometheus_listen_address: ':{{ prometheus_listen_port }}'
+prometheus_listen_address: :{{ prometheus_listen_port }}
 
 # Set the -web.external-url command line parameter. If defined, also set the -web.route-prefix command line parameter to /
 # The URL under which Prometheus is externally reachable (for example, if Prometheus is served via a reverse proxy).
@@ -52,10 +51,10 @@ prometheus_listen_address: ':{{ prometheus_listen_port }}'
 # If the URL has a path portion, it will be used to prefix all HTTP endpoints served by Prometheus.
 # If omitted, relevant URL components will be derived automatically.
 # If set, also set
-prometheus_web_external_url: null
+prometheus_web_external_url:
 
 # URL of alert manager service
-prometheus_alertmanager_url: null
+prometheus_alertmanager_url:
 
 # Parameters for prometheus.yml
 
@@ -69,7 +68,7 @@ prometheus_evaluation_interval: 15s
 # Alert manager variables
 
 # Alert manager version
-alertmanager_version: 0.8.0
+alertmanager_version: "0.8.0"
 
 # Alert manager service name
 alertmanager_service_name: alertmanager
@@ -83,28 +82,28 @@ alertmanager_path_data: /var/lib/alertmanager
 alertmanager_resolve_timeout: 5m
 
 # The default SMTP From header field. default empty
-alertmanager_smtp_from: null
+alertmanager_smtp_from:
 # The default SMTP smarthost used for sending emails. default empty
-alertmanager_smtp_smarthost: null
+alertmanager_smtp_smarthost:
 # SMTP authentication information. default empty
-alertmanager_smtp_auth_username: null
-alertmanager_smtp_auth_password: null
-alertmanager_smtp_auth_secret: null
-alertmanager_smtp_auth_identity: null
+alertmanager_smtp_auth_username:
+alertmanager_smtp_auth_password:
+alertmanager_smtp_auth_secret:
+alertmanager_smtp_auth_identity:
 # The default SMTP TLS requirement. default: false
 alertmanager_smtp_require_tls: false
-_alertmanager_binary_install_dir: '/usr/local/bin'
+_alertmanager_binary_install_dir: /usr/local/bin
 
 # Slack API url. default empty
-alertmanager_slack_api_url: null
+alertmanager_slack_api_url:
 
 # Node exporter variables
-nodeexporter_version: 0.14.0
+nodeexporter_version: "0.14.0"
 # Node exporter service name
 nodeexporter_service_name: nodeexporter_{{ inventory_hostname_short }}
 # Node exporter listen address
 nodeexporter_listen_port: 9100
-nodeexporter_listen_address: ":{{ nodeexporter_listen_port }}"
+nodeexporter_listen_address: :{{ nodeexporter_listen_port }}
 # Collectors enables, comma-separated list of collectors to use. (default "conntrack,diskstats,entropy,edac,filefd,filesystem,hwmon,infiniband,loadavg,mdadm,meminfo,netdev,netstat,sockstat,stat,textfile,time,uname,vmstat,wifi,zfs")
-nodeexporter_collectors_enabled: "conntrack,diskstats,entropy,edac,filefd,filesystem,hwmon,infiniband,loadavg,mdadm,meminfo,netdev,netstat,sockstat,stat,textfile,time,uname,vmstat,wifi,zfs"
+nodeexporter_collectors_enabled: conntrack,diskstats,entropy,edac,filefd,filesystem,hwmon,infiniband,loadavg,mdadm,meminfo,netdev,netstat,sockstat,stat,textfile,time,uname,vmstat,wifi,zfs
 _github_api_headers: "{{ {'GITHUB_TOKEN': lookup('ansible.builtin.env', 'GITHUB_TOKEN')} if (lookup('ansible.builtin.env', 'GITHUB_TOKEN')) else {} }}"

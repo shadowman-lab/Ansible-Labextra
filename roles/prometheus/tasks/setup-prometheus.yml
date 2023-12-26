@@ -1,13 +1,13 @@
 ---
-- name: "Set Archive name fact"
+- name: Set Archive name fact
   ansible.builtin.set_fact:
-    prometheus_prom_archive: "prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}.tar.gz"
+    prometheus_prom_archive: prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}.tar.gz
 
-- name: "Set Binary url"
+- name: Set Binary url
   ansible.builtin.set_fact:
     prometheus_binary_url: "{{ __prometheus_prom_bin_url }}/v{{ prometheus_version }}/{{ prometheus_prom_archive }}"
 
-- name: "Ensure Prometheus binary exists"
+- name: Ensure Prometheus binary exists
   ansible.builtin.stat:
     path: "{{ prometheus_daemon_dir }}/prometheus"
   register: prometheus_binary_stat
@@ -15,36 +15,35 @@
 - name: Block for prometheus
   when: not prometheus_binary_stat.stat.exists
   block:
-
-    - name: "Download Prometheus binaries"
+    - name: Download Prometheus binaries
       ansible.builtin.get_url:
         url: "{{ prometheus_binary_url }}"
-        dest: "/tmp/{{ prometheus_prom_archive }}"
+        dest: /tmp/{{ prometheus_prom_archive }}
         owner: root
         group: root
-        mode: '0644'
+        mode: "0644"
       retries: 5
       delay: 10
 
-    - name: "Expand Prometheus binaries"
+    - name: Expand Prometheus binaries
       ansible.builtin.unarchive:
-        src: "/tmp/{{ prometheus_prom_archive }}"
-        dest: "/tmp"
+        src: /tmp/{{ prometheus_prom_archive }}
+        dest: /tmp
         creates: /tmp/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}/prometheus"
         owner: "{{ prometheus_user }}"
         group: "{{ prometheus_group }}"
         copy: false
 
-    - name: "Remove Prometheus archive"
+    - name: Remove Prometheus archive
       ansible.builtin.file:
-        path: "/tmp/{{ prometheus_prom_archive }}"
+        path: /tmp/{{ prometheus_prom_archive }}
         state: absent
 
     - name: Propagate official prometheus and promtool binaries
       ansible.builtin.copy:
-        src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch }}/{{ item }}"
+        src: /tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch }}/{{ item }}
         dest: "{{ _prometheus_binary_install_dir }}/{{ item }}"
-        mode: '0755'
+        mode: "0755"
         owner: root
         group: root
       with_items:
@@ -55,9 +54,9 @@
 
     - name: Propagate official console templates
       ansible.builtin.copy:
-        src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch }}/{{ item }}/"
+        src: /tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch }}/{{ item }}/
         dest: "{{ prometheus_config_dir }}/{{ item }}/"
-        mode: '0644'
+        mode: "0644"
         owner: root
         group: root
       with_items:
@@ -66,64 +65,64 @@
       notify:
         - restart prometheus service
 
-- name: "Ensure files permissions"
+- name: Ensure files permissions
   ansible.builtin.file:
     path: "{{ prometheus_path_install }}"
     state: directory
     recurse: true
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
-    mode: "go-w"
+    mode: go-w
 
-- name: "Create Prometheus directories"
+- name: Create Prometheus directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
-    mode: "u=rwx,g=rx,o="
+    mode: u=rwx,g=rx,o=
   with_items:
     - "{{ prometheus_path_data }}"
     - "{{ prometheus_path_rules }}"
     - "{{ prometheus_path_file_sd_config }}"
 
-- name: "Ensure Prometheus systemd's unit file exists"
+- name: Ensure Prometheus systemd's unit file exists
   ansible.builtin.template:
-    src: "prometheus.service.j2"
-    dest: "/etc/systemd/system/{{ prometheus_service_name }}.service"
+    src: prometheus.service.j2
+    dest: /etc/systemd/system/{{ prometheus_service_name }}.service
     owner: root
     group: root
-    mode: '0644'
-  when: "ansible_service_mgr == 'systemd'"
+    mode: "0644"
+  when: ansible_service_mgr == 'systemd'
   notify:
-    - "restart prometheus daemon"
-    - "restart prometheus service"
+    - restart prometheus daemon
+    - restart prometheus service
 
-- name: "Ensure Prometheus service (systemd) is started and enabled"
+- name: Ensure Prometheus service (systemd) is started and enabled
   ansible.builtin.service:
     name: "{{ prometheus_service_name }}"
     state: started
     enabled: true
-  when: "ansible_service_mgr == 'systemd'"
+  when: ansible_service_mgr == 'systemd'
 
-- name: "Ensure Prometheus configuration"
+- name: Ensure Prometheus configuration
   ansible.builtin.template:
-    src: "prometheus.yml.j2"
+    src: prometheus.yml.j2
     dest: "{{ prometheus_path_config }}/prometheus.yml"
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
-    mode: "u=rw,g=,o="
+    mode: u=rw,g=,o=
   when: (prometheus_config_template is not defined) or (prometheus_config_template == None)
   notify:
-    - "restart prometheus service"
+    - restart prometheus service
 
-- name: "Ensure User defined Prometheus configuration"
+- name: Ensure User defined Prometheus configuration
   ansible.builtin.template:
     src: "{{ playbook_dir }}/{{ prometheus_config_template }}"
     dest: "{{ prometheus_path_config }}/prometheus.yml"
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
-    mode: "u=rw,g=,o="
+    mode: u=rw,g=,o=
   when: (prometheus_config_template is defined) and (prometheus_config_template != None)
   notify:
-    - "restart prometheus service"
+    - restart prometheus service

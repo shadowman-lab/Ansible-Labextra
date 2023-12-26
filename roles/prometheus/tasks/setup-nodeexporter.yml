@@ -1,13 +1,13 @@
 ---
-- name: "Set Archive name fact"
+- name: Set Archive name fact
   ansible.builtin.set_fact:
-    prometheus_ne_archive: "node_exporter-{{ nodeexporter_version }}.{{ prometheus_platform_suffix }}.tar.gz"
+    prometheus_ne_archive: node_exporter-{{ nodeexporter_version }}.{{ prometheus_platform_suffix }}.tar.gz
 
-- name: "Set Binary url fact"
+- name: Set Binary url fact
   ansible.builtin.set_fact:
     prometheus_ne_binary_url: "{{ __prometheus_ne_bin_url }}/v{{ nodeexporter_version }}/{{ prometheus_ne_archive }}"
 
-- name: "Ensure Node exporter binary exists"
+- name: Ensure Node exporter binary exists
   ansible.builtin.stat:
     path: "{{ nodeexporter_daemon_dir }}/node_exporter"
   register: nodeexporter_binary_stat
@@ -15,75 +15,73 @@
 - name: Block for node exporter
   when: not nodeexporter_binary_stat.stat.exists
   block:
-
-    - name: "Download Node exporter binaries"
+    - name: Download Node exporter binaries
       ansible.builtin.get_url:
         url: "{{ prometheus_ne_binary_url }}"
-        dest: "/tmp/{{ prometheus_ne_archive }}"
+        dest: /tmp/{{ prometheus_ne_archive }}
         owner: root
         group: root
-        mode: '0644'
+        mode: "0644"
       retries: 5
       delay: 10
 
-    - name: "Expand Node exporter binaries"
+    - name: Expand Node exporter binaries
       ansible.builtin.unarchive:
-        src: "/tmp/{{ prometheus_ne_archive }}"
+        src: /tmp/{{ prometheus_ne_archive }}
         dest: "{{ prometheus_path_install }}"
         owner: "{{ prometheus_user }}"
         group: "{{ prometheus_group }}"
         copy: false
 
-    - name: "Remove Node exporter archive"
+    - name: Remove Node exporter archive
       ansible.builtin.file:
-        path: "/tmp/{{ prometheus_ne_archive }}"
+        path: /tmp/{{ prometheus_ne_archive }}
         state: absent
 
-- name: "Ensure files permissions"
+- name: Ensure files permissions
   ansible.builtin.file:
     path: "{{ prometheus_path_install }}"
     state: directory
     recurse: true
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
-    mode: "go-w"
+    mode: go-w
 
-- name: "Create Node exporter directories"
+- name: Create Node exporter directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
-    mode: "u=rwx,g=rx,o="
+    mode: u=rwx,g=rx,o=
   with_items:
     - "{{ alertmanager_path_data }}"
 
-
-- name: "Ensure Node exporter systemd's unit file exists"
+- name: Ensure Node exporter systemd's unit file exists
   ansible.builtin.template:
-    src: "nodeexporter.service.j2"
-    dest: "/etc/systemd/system/{{ nodeexporter_service_name }}.service"
+    src: nodeexporter.service.j2
+    dest: /etc/systemd/system/{{ nodeexporter_service_name }}.service
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   when: ("ansible_service_mgr == 'systemd'")
   notify:
-    - "reload nodeexporter daemon"
-    - "restart nodeexporter service"
+    - reload nodeexporter daemon
+    - restart nodeexporter service
 
-- name: "Ensure Node exporter service (systemd) is started and enabled"
+- name: Ensure Node exporter service (systemd) is started and enabled
   ansible.builtin.service:
     name: "{{ nodeexporter_service_name }}"
     state: started
     enabled: true
   when: ("ansible_service_mgr == 'systemd'")
 
-- name: "Ensure Node exporter systemd service run at boot time"
+- name: Ensure Node exporter systemd service run at boot time
   ansible.builtin.systemd:
     name: "{{ nodeexporter_service_name }}"
     enabled: true
   notify:
-    - "restart nodeexporter service"
+    - restart nodeexporter service
 
 - name: Open Firewalld for Node Exporter
   ansible.posix.firewalld:
