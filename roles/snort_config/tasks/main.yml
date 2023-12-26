@@ -1,9 +1,8 @@
 ---
-
 - name: Find snort rules
   ansible.builtin.find:
     paths: "{{ ids_config_snort_rules_dir }}"
-    patterns: '*.rules'
+    patterns: "*.rules"
     recurse: true
   register: ids_config_snort_rules_files
 
@@ -13,7 +12,7 @@
     dest: /etc/snort/snort.conf
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   notify: restart snort
 
 - name: Enable remote logging
@@ -26,7 +25,7 @@
         backup: true
         owner: root
         group: root
-        mode: '0644'
+        mode: "0644"
       notify:
         - restart rsyslog
 
@@ -46,7 +45,7 @@
         backup: true
         owner: root
         group: root
-        mode: '0644'
+        mode: "0644"
       when: st.stat.exists
 
     - name: Remove ids_config_snort_rsyslog.conf rsyslog config

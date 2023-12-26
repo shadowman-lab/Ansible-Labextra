@@ -1,26 +1,25 @@
 ---
-
-- name: "Use linux 64bit binaries"
+- name: Use linux 64bit binaries
   ansible.builtin.set_fact:
-    prometheus_platform_suffix: "linux-amd64"
-  when: 'ansible_userspace_bits == "64"'
+    prometheus_platform_suffix: linux-amd64
+  when: ansible_userspace_bits == "64"
 
-- name: "Use linux 32bit binaries"
+- name: Use linux 32bit binaries
   ansible.builtin.set_fact:
-    prometheus_platform_suffix: "linux-386"
-  when: 'ansible_userspace_bits == "32"'
+    prometheus_platform_suffix: linux-386
+  when: ansible_userspace_bits == "32"
 
-- name: "Set prometheus daemon directory fact"
+- name: Set prometheus daemon directory fact
   ansible.builtin.set_fact:
-    prometheus_daemon_dir: "/usr/local/bin"
+    prometheus_daemon_dir: /usr/local/bin
   when: '"prometheus" in prometheus_components'
 
-- name: "Set alertmanager daemon directory fact"
+- name: Set alertmanager daemon directory fact
   ansible.builtin.set_fact:
-    alertmanager_daemon_dir: "/usr/local/bin"
+    alertmanager_daemon_dir: /usr/local/bin
   when: '"alertmanager" in prometheus_components'
 
-- name: "Set node exporter daemon directory fact"
+- name: Set node exporter daemon directory fact
   ansible.builtin.set_fact:
     nodeexporter_daemon_dir: "{{ prometheus_path_install }}/node_exporter-{{ nodeexporter_version }}.{{ prometheus_platform_suffix }}"
   when: '"node_exporter" in prometheus_components'

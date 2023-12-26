@@ -1,13 +1,13 @@
 ---
-- name: "Set Archive name fact"
+- name: Set Archive name fact
   ansible.builtin.set_fact:
-    prometheus_am_archive: "alertmanager-{{ alertmanager_version }}.{{ prometheus_platform_suffix }}.tar.gz"
+    prometheus_am_archive: alertmanager-{{ alertmanager_version }}.{{ prometheus_platform_suffix }}.tar.gz
 
-- name: "Set Binary url fact"
+- name: Set Binary url fact
   ansible.builtin.set_fact:
     prometheus_am_binary_url: "{{ __prometheus_am_bin_url }}/v{{ alertmanager_version }}/{{ prometheus_am_archive }}"
 
-- name: "Ensure Alert Manager binary exists"
+- name: Ensure Alert Manager binary exists
   ansible.builtin.stat:
     path: "{{ alertmanager_daemon_dir }}/alertmanager"
   register: alertmanager_binary_stat
@@ -15,89 +15,88 @@
 - name: Block for alert manager
   when: not alertmanager_binary_stat.stat.exists
   block:
-
-    - name: "Download Alert Manager binaries"
+    - name: Download Alert Manager binaries
       ansible.builtin.get_url:
         url: "{{ prometheus_am_binary_url }}"
-        dest: "/tmp/{{ prometheus_am_archive }}"
+        dest: /tmp/{{ prometheus_am_archive }}
         owner: root
         group: root
-        mode: '0644'
+        mode: "0644"
       retries: 5
       delay: 10
 
-    - name: "Expand Alert Manager binaries"
+    - name: Expand Alert Manager binaries
       ansible.builtin.unarchive:
-        src: "/tmp/{{ prometheus_am_archive }}"
-        dest: "/tmp"
-        creates: "/tmp/alertmanager-{{ alertmanager_version }}.{{ prometheus_platform_suffix }}"
+        src: /tmp/{{ prometheus_am_archive }}
+        dest: /tmp
+        creates: /tmp/alertmanager-{{ alertmanager_version }}.{{ prometheus_platform_suffix }}
         owner: "{{ prometheus_user }}"
         group: "{{ prometheus_group }}"
         copy: false
 
-    - name: "Remove Alert Manager archive"
+    - name: Remove Alert Manager archive
       ansible.builtin.file:
-        path: "/tmp/{{ prometheus_am_archive }}"
+        path: /tmp/{{ prometheus_am_archive }}
         state: absent
 
     - name: Propagate official alertmanager and amtool binaries
       ansible.builtin.copy:
-        src: "/tmp/alertmanager-{{ alertmanager_version }}.linux-{{ go_arch }}/{{ item }}"
+        src: /tmp/alertmanager-{{ alertmanager_version }}.linux-{{ go_arch }}/{{ item }}
         dest: "{{ _alertmanager_binary_install_dir }}/{{ item }}"
-        mode: 0755
+        mode: "0755"
         owner: root
         group: root
       with_items:
         - alertmanager
         - amtool
       notify:
-        - "restart alertmanager service"
+        - restart alertmanager service
 
-- name: "Ensure files permissions"
+- name: Ensure files permissions
   ansible.builtin.file:
     path: "{{ prometheus_path_install }}"
     state: directory
     recurse: true
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
-    mode: "go-w"
+    mode: go-w
 
-- name: "Create Alert Manager directories"
+- name: Create Alert Manager directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
-    mode: "u=rwx,g=rx,o="
+    mode: u=rwx,g=rx,o=
   with_items:
     - "{{ alertmanager_path_data }}"
     - "{{ alertmanager_path_templates }}"
 
-- name: "Ensure Alert Manager systemd's unit file exists"
+- name: Ensure Alert Manager systemd's unit file exists
   ansible.builtin.template:
-    src: "alertmanager.service.j2"
-    dest: "/etc/systemd/system/{{ alertmanager_service_name }}.service"
+    src: alertmanager.service.j2
+    dest: /etc/systemd/system/{{ alertmanager_service_name }}.service
     owner: root
     group: root
-    mode: '0644'
-  when: "ansible_service_mgr == 'systemd'"
+    mode: "0644"
+  when: ansible_service_mgr == 'systemd'
   notify:
-    - "restart alertmanager daemon"
-    - "restart alertmanager service"
+    - restart alertmanager daemon
+    - restart alertmanager service
 
-- name: "Ensure Alert Manager service (systemd) is started and enabled"
+- name: Ensure Alert Manager service (systemd) is started and enabled
   ansible.builtin.service:
     name: "{{ alertmanager_service_name }}"
     state: started
     enabled: true
   when: ("ansible_service_mgr == 'systemd'")
 
-- name: "Ensure Alert manager configuration"
+- name: Ensure Alert manager configuration
   ansible.builtin.template:
-    src: "alertmanager.yml.j2"
+    src: alertmanager.yml.j2
     dest: "{{ alertmanager_path_config }}/alertmanager.yml"
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
-    mode: "u=rw,g=,o="
+    mode: u=rw,g=,o=
   notify:
-    - "restart alertmanager service"
+    - restart alertmanager service

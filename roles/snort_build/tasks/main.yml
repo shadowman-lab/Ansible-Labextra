@@ -22,18 +22,17 @@
 
 - name: Verify required variable is defined
   ansible.builtin.fail:
-    msg: "Required variable 'ids_provider' is not defined"
+    msg: Required variable 'ids_provider' is not defined
   when: ids_provider is not defined
 
 - name: Ensure ids_provider is valid
   ansible.builtin.fail:
-    msg: "Provided value for 'ids_provider' is not valid, must be one of {{ ids_provider_list }}"
+    msg: Provided value for 'ids_provider' is not valid, must be one of {{ ids_provider_list }}
   when: ids_provider not in ids_provider_list
 
 - name: Install ids provider snort
-  when: "ids_provider == 'snort'"
+  when: ids_provider == 'snort'
   block:
-
     - name: Install snort and dependent packages - user defined
       ansible.builtin.yum:
         name: "{{ ids_install_pkgs }}"
@@ -51,7 +50,7 @@
 
     - name: Install pulledpork when specified
       ansible.builtin.yum:
-        name: "pulledpork"
+        name: pulledpork
         state: installed
       when: ids_install_snort_use_pulledpork
 
@@ -68,7 +67,7 @@
         state: directory
         owner: root
         group: root
-        mode: '0644'
+        mode: "0644"
 
     - name: Install snort systemd service unit file
       ansible.builtin.template:
@@ -76,7 +75,7 @@
         dest: /etc/systemd/system/snort.service
         owner: root
         group: root
-        mode: '0644'
+        mode: "0644"
       notify: systemctl daemon-reload
 
     - name: Install snort sysconfig file
@@ -85,7 +84,7 @@
         dest: /etc/sysconfig/snort
         owner: root
         group: root
-        mode: '0644'
+        mode: "0644"
       notify: systemctl daemon-reload
 
     - name: Handle ids_install_snort_community_rules_url
@@ -96,26 +95,26 @@
         - name: Get ids_install_snort_community_rules_url rules
           ansible.builtin.get_url:
             url: "{{ ids_install_snort_community_rules_url }}"
-            dest: "/tmp/ansible_role_ids_snort_community-rules.tar.gz"
+            dest: /tmp/ansible_role_ids_snort_community-rules.tar.gz
             owner: root
             group: root
-            mode: '0644'
+            mode: "0644"
 
         - name: Unpack ids_install_snort_community_rules_url rules
           ansible.builtin.unarchive:
             remote_src: true
-            src: "/tmp/ansible_role_ids_snort_community-rules.tar.gz"
-            dest: "/etc/snort/"
-            creates: "/etc/snort/{{ ids_install_snort_community_rules_subdir }}"
+            src: /tmp/ansible_role_ids_snort_community-rules.tar.gz
+            dest: /etc/snort/
+            creates: /etc/snort/{{ ids_install_snort_community_rules_subdir }}
 
         - name: Check for /etc/snort/community-rules/ from rules
           ansible.builtin.stat:
-            path: '/etc/snort/community-rules/'
+            path: /etc/snort/community-rules/
           register: comm_st
 
         - name: Grab the list of files in /etc/snort/community-rules/
           ansible.builtin.find:
-            paths: '/etc/snort/community-rules/'
+            paths: /etc/snort/community-rules/
             file_type: file
           register: comm_rules_files
 
@@ -123,11 +122,11 @@
           ansible.builtin.copy:
             remote_src: true
             src: '{{ item["path"] }}'
-            dest: '/etc/snort/{{ item["path"] | basename }}'
+            dest: /etc/snort/{{ item["path"] | basename }}
             force: false
             owner: root
             group: root
-            mode: '0644'
+            mode: "0644"
           loop: "{{ comm_rules_files['files'] }}"
           when:
             - (comm_st.stat.isdir is defined) and comm_st.stat.isdir
@@ -135,26 +134,26 @@
 
         - name: Check for community.rules from rules
           ansible.builtin.stat:
-            path: '/etc/snort/community.rules'
+            path: /etc/snort/community.rules
           register: commr_st
 
         - name: Ensure rules dir exists
           ansible.builtin.file:
-            path: '/etc/snort/rules'
+            path: /etc/snort/rules
             state: directory
             owner: root
             group: root
-            mode: '0644'
+            mode: "0644"
 
         - name: Copy community.rules into
           ansible.builtin.copy:
             remote_src: true
-            src: '/etc/snort/community.rules'
-            dest: '/etc/snort/rules/community.rules'
+            src: /etc/snort/community.rules
+            dest: /etc/snort/rules/community.rules
             force: false
             owner: root
             group: root
-            mode: '0644'
+            mode: "0644"
           when: (commr_st.stat.isdir is defined) and commr_st.stat.exists
 
     # NOTE: Order matters, snort registered rules should "win" over community
@@ -168,26 +167,26 @@
         - name: Get ids_install_snort_registered_rules_url rules
           ansible.builtin.get_url:
             url: "{{ ids_install_snort_registered_rules_url }}"
-            dest: "/tmp/ansible_role_ids_snort_registered_rules.tar.gz"
+            dest: /tmp/ansible_role_ids_snort_registered_rules.tar.gz
             owner: root
             group: root
-            mode: '0644'
+            mode: "0644"
 
         - name: Unpack ids_install_snort_registered_rules_url rules
           ansible.builtin.unarchive:
             remote_src: true
-            src: "/tmp/ansible_role_ids_snort_registered_rules.tar.gz"
-            dest: "/etc/snort/"
-            creates: "/etc/snort/{{ ids_install_snort_registered_rules_subdir }}"
+            src: /tmp/ansible_role_ids_snort_registered_rules.tar.gz
+            dest: /etc/snort/
+            creates: /etc/snort/{{ ids_install_snort_registered_rules_subdir }}
 
         - name: Check for /etc/snort/etc/ from rules
           ansible.builtin.stat:
-            path: '/etc/snort/etc/'
+            path: /etc/snort/etc/
           register: st
 
         - name: Grab the list of files in /etc/snort/etc/
           ansible.builtin.find:
-            paths: '/etc/snort/etc/'
+            paths: /etc/snort/etc/
             file_type: file
           register: reg_rules_files
 
@@ -195,11 +194,11 @@
           ansible.builtin.copy:
             remote_src: true
             src: '{{ item["path"] }}'
-            dest: '/etc/snort/{{ item["path"] | basename }}'
+            dest: /etc/snort/{{ item["path"] | basename }}
             force: false
             owner: root
             group: root
-            mode: '0644'
+            mode: "0644"
           loop: "{{ reg_rules_files['files'] }}"
           when:
             - (st.stat.isdir is defined) and st.stat.isdir
@@ -210,11 +209,11 @@
       ansible.builtin.file:
         path: "{{ item }}"
         state: touch
-        modification_time: "preserve"
-        access_time: "preserve"
+        modification_time: preserve
+        access_time: preserve
         owner: root
         group: root
-        mode: '0644'
+        mode: "0644"
       with_items:
         - /etc/snort/rules/white_list.rules
         - /etc/snort/rules/black_list.rules
@@ -225,19 +224,19 @@
       block:
         - name: Ensure dirs exist as needed for pulledpork
           ansible.builtin.file:
-            path: "/etc/snort/rules/iplists/"
-            state: "directory"
+            path: /etc/snort/rules/iplists/
+            state: directory
             owner: root
             group: root
-            mode: '0644'
+            mode: "0644"
 
         - name: Run pulledpork
-          ansible.builtin.shell: "/usr/bin/pulledpork -c /etc/pulledpork/pulledpork.conf && /usr/bin/touch /etc/pulledpork/ran_pulled_pork"
+          ansible.builtin.shell: /usr/bin/pulledpork -c /etc/pulledpork/pulledpork.conf && /usr/bin/touch /etc/pulledpork/ran_pulled_pork
           args:
             creates: /etc/pulledpork/ran_pulled_pork
 
 - name: Configure ids log normalization for provider snort
-  when: "ids_provider == 'snort' and ids_install_snort_barnyard2_normalize_logs"
+  when: ids_provider == 'snort' and ids_install_snort_barnyard2_normalize_logs
   block:
     # Originally from rmonk copr
     # https://copr.fedorainfracloud.org/coprs/rmonk/Snort-IDS/
@@ -252,7 +251,7 @@
         dest: /etc/snort/barnyard2.conf
         owner: root
         group: root
-        mode: '0644'
+        mode: "0644"
 
     - name: Install barnyard2 systemd service unit file
       ansible.builtin.template:
@@ -260,7 +259,7 @@
         dest: /etc/systemd/system/barnyard2.service
         owner: root
         group: root
-        mode: '0644'
+        mode: "0644"
       notify: systemctl daemon-reload
 
     - name: Install barnyard2 sysconfig file
@@ -269,7 +268,7 @@
         dest: /etc/sysconfig/barnyard2
         owner: root
         group: root
-        mode: '0644'
+        mode: "0644"
       notify: systemctl daemon-reload
 
     - name: Start barnyard2
