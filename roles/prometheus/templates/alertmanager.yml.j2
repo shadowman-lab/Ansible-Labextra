@@ -39,7 +39,7 @@ route:
 receivers:
   - name: 'EDA'
     webhook_configs:
-    - url: "http://eda.shadowman.dev:8000/endpoint"
+    - url: "http://{{ eda_server_url }}:8000/endpoint"
       send_resolved: false
 
 
