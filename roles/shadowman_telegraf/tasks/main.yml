@@ -1,0 +1,27 @@
+---
+- name: Copy Influx repo
+  ansible.builtin.copy:
+    src: files/influxdb.repo
+    dest: /etc/yum.repos.d/influxdb.repo
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Install telegraf
+  ansible.builtin.dnf:
+    name: telegraf
+    state: present
+
+- name: Deploy telegraf configuration
+  ansible.builtin.template:
+    src: templates/telegraf.conf
+    dest: /etc/telegraf/telegraf.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Enable telegraf
+  ansible.builtin.systemd_service:
+    name: telegraf
+    enabled: true
+    state: started
