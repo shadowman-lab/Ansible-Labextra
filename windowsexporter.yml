@@ -1,0 +1,10 @@
+---
+- name: Install Prometheus Windows Exporter
+  hosts: all
+  vars:
+    - prometheus_components:
+        - windows_exporter
+    - windowsexporter_version: latest
+
+  roles:
+    - prometheus

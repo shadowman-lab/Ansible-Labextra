@@ -108,4 +108,11 @@ nodeexporter_listen_address: :{{ nodeexporter_listen_port }}
 nodeexporter_collectors_enabled: conntrack,diskstats,entropy,edac,filefd,filesystem,hwmon,infiniband,loadavg,mdadm,meminfo,netdev,netstat,sockstat,stat,textfile,time,uname,vmstat,wifi,zfs
 _github_api_headers: "{{ {'GITHUB_TOKEN': lookup('ansible.builtin.env', 'GITHUB_TOKEN')} if (lookup('ansible.builtin.env', 'GITHUB_TOKEN')) else {} }}"
 
+# Node exporter variables
+windowsexporter_version: "0.25.1"
+# Node exporter service name
+# Node exporter listen address
+windowsexporter_listen_port: 9182
+
+
 eda_server_url: eda.shadowman.dev

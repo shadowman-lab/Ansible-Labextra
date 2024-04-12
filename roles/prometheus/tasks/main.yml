@@ -5,6 +5,7 @@
   ansible.builtin.group:
     name: "{{ prometheus_group }}"
     state: present
+  when: '"windows_exporter" not in prometheus_components'
 
 - name: Create Prometheus system user
   ansible.builtin.user:
@@ -14,6 +15,7 @@
     shell: /sbin/nologin
     comment: Prometheus System user
     state: present
+  when: '"windows_exporter" not in prometheus_components'
 
 - name: Create Prometheus directories
   ansible.builtin.file:
@@ -27,9 +29,11 @@
     - "{{ prometheus_path_config }}"
     - "{{ prometheus_path_log }}"
     - "{{ prometheus_path_pid }}"
+  when: '"windows_exporter" not in prometheus_components'
 
 - name: Set role facts
   ansible.builtin.include_tasks: setup-facts.yml
+  when: '"windows_exporter" not in prometheus_components'
 
 - name: Discover latest version of prometheus
   ansible.builtin.set_fact:
@@ -64,9 +68,24 @@
     - nodeexporter_version == "latest"
     - '"node_exporter" in prometheus_components'
 
+- name: Discover latest version of windows exporter
+  ansible.builtin.set_fact:
+    windowsexporter_version: "{{ (lookup('url', 'https://api.github.com/repos/prometheus-community/windows_exporter/releases/latest', headers=_github_api_headers, split_lines=False)
+      | from_json).get('tag_name') | replace('v', '') }}"
+  run_once: true
+  until: windowsexporter_version is version('0.0.0', '>=')
+  retries: 10
+  when:
+    - windowsexporter_version == "latest"
+    - '"windows_exporter" in prometheus_components'
+
 - name: Install Node Exporter
   ansible.builtin.include_tasks: setup-nodeexporter.yml
   when: '"node_exporter" in prometheus_components'
+
+- name: Install Windows Exporter
+  ansible.builtin.include_tasks: setup-windowsexporter.yml
+  when: '"windows_exporter" in prometheus_components'
 
 - name: Install Alert manager
   ansible.builtin.include_tasks: setup-alertmanager.yml

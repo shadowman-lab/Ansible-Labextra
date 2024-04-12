@@ -1,0 +1,37 @@
+---
+- name: Set Archive name fact
+  ansible.builtin.set_fact:
+    prometheus_we_archive: windows_exporter-{{ nodeexporter_version }}-amd64.exe
+
+- name: Set exe fact
+  ansible.builtin.set_fact:
+    prometheus_we_binary_url: "{{ __prometheus_we_bin_url }}/v{{ nodeexporter_version }}/{{ prometheus_we_archive }}"
+
+- name: Create directory structure
+  ansible.windows.win_file:
+    path: C:\Program Files\windows_exporter
+    state: directory
+
+- name: Download Node exporter exe
+  ansible.windows.win_get_url:
+    url: "{{ prometheus_we_binary_url }}"
+    dest: C:\Program Files\windows_exporter\windows_exporter.exe
+  retries: 5
+  delay: 10
+
+- name: Copy windows_exporter config
+  ansible.windows.win_template:
+    src: windows_exporter.yml.j2
+    dest: C:\Program Files\windows_exporter\windows_exporter.yml
+
+- name: Run windows exporter exe in the background
+  ansible.windows.win_command:
+    cmd: '"C:\Program Files\windows_exporter\windows_exporter.exe" --config.file="C:\Program Files\windows_exporter\windows_exporter.yml"'
+  async: 1000
+  poll: 0
+  register: windows_exporter
+
+- name: Clean up async file
+  ansible.builtin.async_status:
+    jid: '{{ windows_exporter.ansible_job_id }}'
+    mode: cleanup
