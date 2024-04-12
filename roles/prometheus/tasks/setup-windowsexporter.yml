@@ -1,11 +1,11 @@
 ---
 - name: Set Archive name fact
   ansible.builtin.set_fact:
-    prometheus_we_archive: windows_exporter-{{ nodeexporter_version }}-amd64.exe
+    prometheus_we_archive: windows_exporter-{{ windowsexporter_version }}-amd64.exe
 
 - name: Set exe fact
   ansible.builtin.set_fact:
-    prometheus_we_binary_url: "{{ __prometheus_we_bin_url }}/v{{ nodeexporter_version }}/{{ prometheus_we_archive }}"
+    prometheus_we_binary_url: "{{ __prometheus_we_bin_url }}/v{{ windowsexporter_version }}/{{ prometheus_we_archive }}"
 
 - name: Create directory structure
   ansible.windows.win_file:
