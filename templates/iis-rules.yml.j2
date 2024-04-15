@@ -1,0 +1,11 @@
+groups:
+- name: iis-rules
+  rules:
+  - alert: IIS Application Not Running
+    expr: windows_iis_current_application_pool_state{state="Running"} == 1
+    for: {{tower_scrape}}
+    labels:
+      severity: critical
+    annotations:
+      description: 'IIS Application Disabled for {% raw %}{{ $labels.job }}{% endraw %}.'
+      summary: 'IIS Application Disabled (instance: {% raw %}{{ $labels.job }}{% endraw %})'
