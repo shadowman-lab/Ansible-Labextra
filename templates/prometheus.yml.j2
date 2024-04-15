@@ -59,6 +59,12 @@ scrape_configs:
     static_configs:
     - targets: ['rhel8.shadowman.dev:9100']
 
+  # Scrape job for windows exporter
+  - job_name: 'win2016.ad.shadowman.dev'
+    scrape_interval: {{ tower_scrape }}
+    static_configs:
+    - targets: ['win2016.ad.shadowman.dev:9100']
+
 #  # The labels to add to any time series or alerts when communicating with
 #  # external systems (federation, remote storage, Alertmanager).
 #  external_labels:
