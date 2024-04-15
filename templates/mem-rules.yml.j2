@@ -17,3 +17,19 @@ groups:
     annotations:
       summary: 'Host too much free memory (instance: {% raw %}{{ $labels.job }}{% endraw %})'
       description: 'Node memory is too free (> 90% left)  VALUE = {% raw %}{{ $value }}{% endraw %}'
+  - alert: WindowsHostOutOfMemory
+    expr: 100 - 100 * windows_os_physical_memory_free_bytes / windows_cs_physical_memory_bytes > 90
+    for: {{tower_scrape}}
+    labels:
+      severity: warning
+    annotations:
+      summary: 'Windows Host out of memory (instance: {% raw %}{{ $labels.job }}{% endraw %})'
+      description: 'Windows Node memory is filling up (< 10% left)  VALUE = {% raw %}{{ $value }}{% endraw %}'
+  - alert: WindowsHostTooMuchMemory
+    expr: 100 - 100 * windows_os_physical_memory_free_bytes / windows_cs_physical_memory_bytes < 10
+    for: {{tower_scrape}}
+    labels:
+      severity: warning
+    annotations:
+      summary: 'Windows Host too much free memory (instance: {% raw %}{{ $labels.job }}{% endraw %})'
+      description: 'Windows Node memory is too free (> 90% left)  VALUE = {% raw %}{{ $value }}{% endraw %}'

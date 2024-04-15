@@ -16,4 +16,20 @@ groups:
       severity: warning
     annotations:
       summary: 'Host low CPU load (instance: {% raw %}{{ $labels.job }}{% endraw %})'
-      description: 'CPU load is < .1% VALUE = {% raw %}{{ $value }}{% endraw %}'                                                                            
+      description: 'CPU load is < .1% VALUE = {% raw %}{{ $value }}{% endraw %}'
+  - alert: HostHighCpuLoadWindows
+    expr: 100 - (avg by(instance,job) (rate(windows_cpu_time_total{mode="idle"}[{{ rate_number }}])) * 100) > {{ cpuload }}
+    for: {{tower_scrape}}
+    labels:
+      severity: critical
+    annotations:
+      summary: 'Windows Host high CPU load (instance: {% raw %}{{ $labels.job }}{% endraw %})'
+      description: 'Windows CPU load is > {{ cpuload }}% VALUE = {% raw %}{{ $value }}{% endraw %}'
+  - alert: HostLowCpuLoadWindows
+    expr: 100 - (avg by(instance,job) (rate(windows_cpu_time_total{mode="idle"}[{{ rate_number }}])) * 100) < .1
+    for: {{tower_scrape}}
+    labels:
+      severity: warning
+    annotations:
+      summary: 'Windows Host low CPU load (instance: {% raw %}{{ $labels.job }}{% endraw %})'
+      description: 'Windows CPU load is < .1% VALUE = {% raw %}{{ $value }}{% endraw %}'
