@@ -24,14 +24,9 @@
     src: windows_exporter.yml.j2
     dest: C:\Program Files\windows_exporter\windows_exporter.yml
 
-- name: Run windows exporter exe in the background
-  ansible.windows.win_command:
-    cmd: '"C:\Program Files\windows_exporter\windows_exporter.exe" --config.file="C:\Program Files\windows_exporter\windows_exporter.yml"'
-  async: 1000
-  poll: 0
-  register: windows_exporter
-
-- name: Clean up async file
-  ansible.builtin.async_status:
-    jid: '{{ windows_exporter.ansible_job_id }}'
-    mode: cleanup
+- name: Create a new service for Windows Exporter
+  ansible.windows.win_service:
+    name: Windows Exporter
+    path: '"C:\Program Files\windows_exporter\windows_exporter.exe" --config.file="C:\Program Files\windows_exporter\windows_exporter.yml"'
+    start_mode: auto
+    state: started
