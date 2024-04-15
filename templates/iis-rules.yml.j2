@@ -2,7 +2,7 @@ groups:
 - name: iis-rules
   rules:
   - alert: IIS Application Not Running
-    expr: windows_iis_current_application_pool_state{state="Running"} == 1
+    expr: windows_iis_current_application_pool_state{state="Running"} == 0
     for: {{tower_scrape}}
     labels:
       severity: critical
