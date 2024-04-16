@@ -1,0 +1,24 @@
+---
+- name: Stop datadog service
+  ansible.builtin.systemd_service:
+    name: datadog-agent
+    state: stopped
+
+- name: Remove datadog agent
+  ansible.builtin.dnf:
+    name: datadog-agent
+    state: absent
+
+- name: Remove datadog user
+  ansible.builtin.user:
+    name: dd-agent
+    state: absent
+
+- name: Recursively remove directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /opt/datadog-agent/
+    - /etc/datadog-agent/
+    - /var/log/datadog/
