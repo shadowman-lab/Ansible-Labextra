@@ -39,8 +39,10 @@ route:
 receivers:
   - name: 'EDA'
     webhook_configs:
-    - url: "http://{{ eda_server_url }}:8000/endpoint"
+    - url: "https://{{ eda_server_url }}:8000/endpoint"
       send_resolved: false
+      http_config
+        bearer_token: "{{ eda_auth_token }}"
 
 
 
