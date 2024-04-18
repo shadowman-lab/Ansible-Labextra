@@ -16,6 +16,12 @@
         custom_sensitive_words: ['consul_token', 'dd_api_key']
       network_config:
         enabled: true
+    datadog_checks:
+      http_check:
+        init_config:
+        instances:
+          - name: Website
+            url: https://{{ ansible_fqdn }}
 
   roles:
     - datadog.dd.agent
