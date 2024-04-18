@@ -1,6 +1,5 @@
 - name: Uninstall Datadog Agent
   hosts: all
-  gather_facts: false
 
   roles:
     - datadog_remove

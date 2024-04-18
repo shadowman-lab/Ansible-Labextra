@@ -1,0 +1,11 @@
+---
+- name: Run PowerShell script to remove datadog agent
+  ansible.windows.win_powershell:
+    script: |
+      $productCode = (@(Get-ChildItem -Path "HKLM:SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall" -Recurse) | Where {$_.GetValue("DisplayName") -like "Datadog Agent" }).PSChildName
+      start-process msiexec -Wait -ArgumentList ('/log', 'C:\uninst.log', '/q', '/x', "$productCode", 'REBOOT=ReallySuppress')
+
+- name: Delete datadog directory
+  ansible.windows.win_file:
+    path: C:\ProgramData\Datadog
+    state: absent

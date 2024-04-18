@@ -1,24 +1,8 @@
 ---
-- name: Stop datadog service
-  ansible.builtin.systemd_service:
-    name: datadog-agent
-    state: stopped
+- name: Remove agent from Linux
+  ansible.builtin.include_tasks: linux.yml
+  when: ansible_facts.os_family != "Windows"
 
-- name: Remove datadog agent
-  ansible.builtin.dnf:
-    name: datadog-agent
-    state: absent
-
-- name: Remove datadog user
-  ansible.builtin.user:
-    name: dd-agent
-    state: absent
-
-- name: Recursively remove directories
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: absent
-  loop:
-    - /opt/datadog-agent/
-    - /etc/datadog-agent/
-    - /var/log/datadog/
+- name: Remove agent from Windows
+  ansible.builtin.include_tasks: windows.yml
+  when: ansible_facts.os_family == "Windows"
