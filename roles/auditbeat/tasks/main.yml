@@ -1,0 +1,50 @@
+---
+- name: Remove existing service
+  ansible.windows.win_service:
+    name: auditbeat
+    state: absent
+  tags:
+    - remove
+
+- name: Remove any previous auditbeat
+  ansible.windows.win_file:
+    path: "{{ auditbeat_install_location }}"
+    state: absent
+  tags:
+    - remove
+
+- name: Recreate directory
+  ansible.windows.win_file:
+    path: "{{ auditbeat_install_location }}"
+    state: directory
+  tags:
+    - create
+
+- name: Get auditbeat zip
+  ansible.windows.win_get_url:
+    url: "{{ auditbeat_download_url_base }}/{{ auditbeat_download_file }}{{ file_ext }}"
+    dest: "{{ auditbeat_install_location }}/{{ auditbeat_download_file }}{{ file_ext }}"
+  tags:
+    - create
+
+- name: Unzip auditbeat
+  community.windows.win_unzip:
+    src: "{{ auditbeat_install_location }}/{{ auditbeat_download_file }}{{ file_ext }}"
+    dest: "{{ auditbeat_install_location }}"
+  tags:
+    - create
+
+- name: Install the service via script
+  ansible.windows.win_command: powershell.exe -ExecutionPolicy ByPass -File "{{ auditbeat_install_location }}/{{ auditbeat_download_file }}/install-service-auditbeat.ps1"
+  args:
+    chdir: "{{ auditbeat_install_location }}/{{ auditbeat_download_file }}"
+  tags:
+    - create
+
+- name: Copy auditbeat configuration.
+  ansible.windows.win_template:
+    src: auditbeat.yml.j2
+    dest: "{{ auditbeat_install_location }}/{{ auditbeat_download_file }}/auditbeat.yml"
+  notify: Restart auditbeat
+  tags:
+    - create

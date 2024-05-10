@@ -1,0 +1,7 @@
+---
+auditbeat_download_url_base: https://artifacts.elastic.co/downloads/beats/auditbeat
+file_ext: .zip
+auditbeat_download_file: auditbeat-8.13.4-windows-x86_64
+auditbeat_install_location: C:/Program Files/Auditbeat
+kafkahost: 172.16.2.216:9092
+kafkatopic: auditbeat

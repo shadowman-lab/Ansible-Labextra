@@ -1,0 +1,5 @@
+---
+- name: Restart auditbeat
+  ansible.windows.win_service:
+    name: auditbeat
+    state: restarted
