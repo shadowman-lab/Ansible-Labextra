@@ -1,0 +1,41 @@
+---
+- name: Remove Auditbeat
+  ansible.builtin.dnf:
+    name: auditbeat
+    state: absent
+  tags:
+    - remove
+
+- name: Remove Auditbeat directory
+  ansible.builtin.file:
+    path: /etc/auditbeat
+    state: absent
+  tags:
+    - remove
+
+- name: Download auditbeat
+  ansible.builtin.get_url:
+    url: "{{ auditbeat_download_url_base }}/{{ rhelauditbeat_download_file }}{{ rhelfile_ext }}"
+    dest: /tmp/auditbeat.rpm
+    mode: "0440"
+  tags:
+    - create
+
+- name: Install Auditbeat
+  ansible.builtin.dnf:
+    name: /tmp/auditbeat.rpm
+    state: present
+    disable_gpg_check: true
+  tags:
+    - create
+
+- name: Copy auditbeat configuration.
+  ansible.builtin.template:
+    src: redhatauditbeat.yml.j2
+    dest: "/etc/auditbeat/auditbeat.yml"
+    owner: root
+    group: root
+    mode: '0600'
+  notify: Red Hat restart auditbeat
+  tags:
+    - create
