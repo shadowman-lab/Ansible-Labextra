@@ -65,6 +65,12 @@ scrape_configs:
     static_configs:
     - targets: ['win2016.ad.shadowman.dev:9100']
 
+  # Scrape job for POSTGRESQL exporter
+  - job_name: 'AAP POSTGRESQL Exporter Metrics'
+    scrape_interval: {{ tower_scrape }}
+    static_configs:
+    - targets: ['towerdb.shadowman.dev:9187']
+
 #  # The labels to add to any time series or alerts when communicating with
 #  # external systems (federation, remote storage, Alertmanager).
 #  external_labels:
