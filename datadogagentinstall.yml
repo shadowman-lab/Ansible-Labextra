@@ -3,7 +3,7 @@
   gather_facts: false
 
   vars:
-    datadog_agent_version: "7.39.0"
+    datadog_agent_version: "7.55.3"
     datadog_config:
       hostname: "{{ ansible_fqdn }}"
       log_level: INFO
