@@ -1,5 +1,9 @@
 - name: Download and Install or Uninstall Dynatrace OneAgent
   hosts: all
 
+  vars:
+    oneagent_install_args:
+      - --set-host-group=shadowman
+
   roles:
     - dynatrace.oneagent.oneagent
