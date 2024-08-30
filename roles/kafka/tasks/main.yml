@@ -55,12 +55,12 @@
 
 - name: Extract kafka tar
   ansible.builtin.unarchive:
-    src: https://downloads.apache.org/kafka/3.7.0/kafka_2.13-3.7.0.tgz
+    src: https://downloads.apache.org/kafka/3.8.0/kafka_2.13-3.8.0.tgz
     dest: /opt
     remote_src: true
 
 - name: Create Kafka topic
-  ansible.builtin.command: /opt/kafka_2.13-3.7.0/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic {{ topic
+  ansible.builtin.command: /opt/kafka_2.13-3.8.0/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic {{ topic
     }}
   register: kafkatopic
   changed_when: kafkatopic.stdout == "Created topic " ~ topic ~ "."
