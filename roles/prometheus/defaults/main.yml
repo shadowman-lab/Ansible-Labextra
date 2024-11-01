@@ -115,4 +115,4 @@ windowsexporter_version: "0.25.1"
 windowsexporter_listen_port: 9182
 
 
-eda_server_url: eda.shadowman.dev
+eda_server_url: tower.shadowman.dev
