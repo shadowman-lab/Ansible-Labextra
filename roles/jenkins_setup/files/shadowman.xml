@@ -22,62 +22,58 @@
 pipeline {
     agent any
     stages {
-        stage(&apos;SCM Get Code&apos;) {
+        stage('SCM Get Code') {
             steps {
                 script {
-                    sh &apos;/usr/bin/git config --global http.sslVerify false&apos;
+                    sh '/usr/bin/git config --global http.sslVerify false'
                 }
-                checkout([$class: &apos;GitSCM&apos;, branches: [[name: &apos;*/main&apos;]], extensions: [], userRemoteConfigs: [[url: &apos;https://cicd.shadowman.dev:3000/ansible/html.git&apos;]]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://cicd.shadowman.dev:3000/ansible/html.git']]])
             }
         }
 
-        stage(&apos;Installing packages&apos;) {
+        stage('Installing packages') {
             steps {
                 script {
-                    sh &apos;/usr/bin/python3 -m pip install pylint pylint-django bump2version Django==1.11.29&apos;
+                    sh '/usr/bin/python3 -m pip install pylint pylint-django bump2version Django==1.11.29 --break-system-packages'
                 }
             }
         }
-        
-        stage(&apos;Static Code Checking&apos;) {
+
+        stage('Static Code Checking') {
             steps {
                 script {
-                    sh &apos;find . -name \\*.py | xargs /usr/bin/python3 -m pylint --load-plugins=pylint_django -f parseable | tee pylint.log&apos;
+                    sh 'find . -name \\*.py | xargs /usr/bin/python3 -m pylint --load-plugins=pylint_django -f parseable | tee pylint.log'
                     recordIssues(
-                        tool: pyLint(pattern: &apos;pylint.log&apos;),
+                        tool: pyLint(pattern: 'pylint.log'),
                         failTotalHigh: 10,
                     )
                 }
             }
         }
-        stage(&apos;Build and Tag&apos;) {
+        stage('Build and Tag') {
             steps {
-                withCredentials([gitUsernamePassword(credentialsId: &apos;gitea_repo&apos;, gitToolName: &apos;git&apos;)]) {
-                    sh &quot;&quot;&quot;
+                withCredentials([gitUsernamePassword(credentialsId: 'gitea_repo', gitToolName: 'git')]) {
+                    sh """
                         git reset --hard HEAD
                         git checkout
-                        git pull --force --rebase
                         git fetch --tags --all --prune
                         git config --replace-all user.name ${env.GIT_USERNAME}
                         git config --replace-all user.email ${env.GIT_USERNAME}
 
-                    &quot;&quot;&quot;
+                    """
                 }
             }
         }
-        
-        stage(&apos;Controller- DevOps&apos;) {
+
+        stage('Controller- DevOps') {
             steps {
-                ansibleTower(
-                    towerServer: &apos;Shadowman controller&apos;,
-                    templateType: &apos;workflow&apos;,
-                    jobTemplate: &apos;Gitea DevOps Workflow&apos;,
-                    importTowerLogs: true,
-                    removeColor: false,
-                    verbose: true
-                )
+                withCredentials([usernamePassword(credentialsId: 'jenkins_controller', passwordVariable: 'CONTROLLER_PASS', usernameVariable: 'CONTROLLER_USER')]) {
+                    sh 'curl -u ${CONTROLLER_USER}:${CONTROLLER_PASS} -i -H "Content-Type:application/json" https://tower.shadowman.dev/api/controller/v2/workflow_job_templates/602/launch/ --data "{}"'
+                }
+
             }
         }
+
     }
 
 }
