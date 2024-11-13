@@ -11,12 +11,21 @@
   </actions>
   <description></description>
   <keepDependencies>false</keepDependencies>
-  <properties>
-    <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
-      <triggers/>
-    </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
-  </properties>
-  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2725.v7b_c717eb_12ce">
+<properties>
+  <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.40.0">
+    <projectUrl>https://cicd.shadowman.dev:3000/ansible/html/</projectUrl>
+    <displayName/>
+  </com.coravy.hudson.plugins.github.GithubProjectProperty>
+<org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+  <triggers>
+    <hudson.triggers.SCMTrigger>
+      <spec/>
+      <ignorePostCommitHooks>false</ignorePostCommitHooks>
+    </hudson.triggers.SCMTrigger>
+  </triggers>
+</org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+</properties>
+<definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@3990.vd281dd77a_388">
     <script>#!/usr/bin/env groovy
 
 pipeline {
