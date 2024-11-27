@@ -47,6 +47,12 @@
         dest: /etc/prometheus/rules/iis-rules.yml
       notify: restart_prometheus
 
+    - name: Updated disk-usage
+      ansible.builtin.template:
+        src: templates/disk-usage.yml.j2
+        dest: /etc/prometheus/rules/disk-usage.yml
+      notify: restart_prometheus
+
   handlers:
     - name: restart_prometheus
       ansible.builtin.service:

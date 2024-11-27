@@ -1,0 +1,11 @@
+groups:
+- name: disk-usage
+  rules:
+  - alert: RootDiskSpaceLow
+    expr: node_filesystem_avail_bytes{mountpoint="/"} < (0.2 * node_filesystem_size_bytes{mountpoint="/"})
+    for: {{tower_scrape}}
+    labels:
+      severity: warning
+    annotations:
+      summary: 'Low root disk space (instance: {% raw %}{{ $labels.job }}{% endraw %})'
+      description: 'Root disk is almost full VALUE = {% raw %}{{ $value }}{% endraw %}'
