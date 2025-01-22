@@ -1,0 +1,36 @@
+[Unit]
+Description=Podman container-kafka.service
+Documentation=man:podman-generate-systemd(1)
+Wants=network-online.target
+After=network-online.target
+RequiresMountsFor=%t/containers
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=on-failure
+TimeoutStopSec=70
+ExecStart=/usr/bin/podman container run \
+        --cidfile=%t/%n.ctr-id \
+        --cgroups=no-conmon \
+        --rm \
+        --sdnotify=conmon \
+        --replace \
+        --name kafka \
+        --env ALLOW_PLAINTEXT_LISTENER=yes \
+        --env KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
+        --env KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://{{ inventory_hostname }}:9092 \
+        --network messaging \
+        --publish 9092:9092 \
+        --detach=True bitnami/kafka
+ExecStop=/usr/bin/podman stop \
+        --ignore -t 10 \
+        --cidfile=%t/%n.ctr-id
+ExecStopPost=/usr/bin/podman rm \
+        -f \
+        --ignore -t 10 \
+        --cidfile=%t/%n.ctr-id
+Type=notify
+NotifyAccess=all
+
+[Install]
+WantedBy=default.target
