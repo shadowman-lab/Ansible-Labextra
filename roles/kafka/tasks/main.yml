@@ -51,6 +51,12 @@
     group: root
     owner: root
 
+- name: Start and enable Kafka podman service
+  ansible.builtin.service:
+    name: container-kafka.service
+    state: started
+    enabled: true
+
 - name: Extract kafka tar
   ansible.builtin.unarchive:
     src: https://downloads.apache.org/kafka/3.9.0/kafka_2.13-3.9.0.tgz
