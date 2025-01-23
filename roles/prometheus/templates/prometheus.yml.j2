@@ -34,30 +34,30 @@ scrape_configs:
 
   # Scrape Config for Tower
   - job_name: 'tower metrics'
-    metrics_path: /api/v2/metrics/
+    metrics_path: /api/controller/v2/metrics/
     scrape_interval: {{ tower_scrape }}
     scheme: https
     bearer_token: "{{ bearer_token }}"
     static_configs:
-    - targets: ['tower1.shadowman.dev:443']
+    - targets: ['aap.shadowman.dev:443']
 
   # Scrape config for Tower Node Exporter
   - job_name: 'tower1.shadowman.dev'
     scrape_interval: {{ tower_scrape }}
     static_configs:
-    - targets: ['tower1.shadowman.dev:9100']
+    - targets: ['aapcontroller1.shadowman.dev:9100']
 
   # Scrape config for Tower Node Exporter
   - job_name: 'tower2.shadowman.dev'
     scrape_interval: {{ tower_scrape }}
     static_configs:
-    - targets: ['tower2.shadowman.dev:9100']
+    - targets: ['aapcontroller2.shadowman.dev:9100']
 
   # Scrape job for rhel8 node exporter
   - job_name: 'rhel8.shadowman.dev'
     scrape_interval: {{ tower_scrape }}
     static_configs:
-    - targets: ['rhel8.shadowman.dev:9100']
+    - targets: ['aapen.shadowman.dev:9100']
 
   # Scrape job for windows exporter
   - job_name: 'win2016.ad.shadowman.dev'
