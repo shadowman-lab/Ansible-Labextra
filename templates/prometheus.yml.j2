@@ -32,8 +32,8 @@ scrape_configs:
     static_configs:
     - targets: ['{{ inventory_hostname }}:9090']
 
-  # Scrape Config for Tower
-  - job_name: 'tower metrics'
+# Scrape Config for Controller
+  - job_name: 'controller metrics'
     metrics_path: /api/controller/v2/metrics/
     scrape_interval: {{ tower_scrape }}
     scheme: https
@@ -41,20 +41,20 @@ scrape_configs:
     static_configs:
     - targets: ['aap.shadowman.dev:443']
 
-  # Scrape config for Tower Node Exporter
-  - job_name: 'tower1.shadowman.dev'
+  # Scrape config for Controller Node Exporter
+  - job_name: 'aapcontroller1.shadowman.dev'
     scrape_interval: {{ tower_scrape }}
     static_configs:
     - targets: ['aapcontroller1.shadowman.dev:9100']
 
-  # Scrape config for Tower Node Exporter
-  - job_name: 'tower2.shadowman.dev'
+  # Scrape config for Controller Node Exporter
+  - job_name: 'aapcontroller2.shadowman.dev'
     scrape_interval: {{ tower_scrape }}
     static_configs:
     - targets: ['aapcontroller2.shadowman.dev:9100']
 
-  # Scrape job for rhel8 node exporter
-  - job_name: 'rhel8.shadowman.dev'
+  # Scrape job for aapen node exporter
+  - job_name: 'aapen.shadowman.dev'
     scrape_interval: {{ tower_scrape }}
     static_configs:
     - targets: ['aapen.shadowman.dev:9100']
