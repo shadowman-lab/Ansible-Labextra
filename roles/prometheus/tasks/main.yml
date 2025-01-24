@@ -31,10 +31,6 @@
     - "{{ prometheus_path_pid }}"
   when: '"windows_exporter" not in prometheus_components'
 
-- name: Set role facts
-  ansible.builtin.include_tasks: setup-facts.yml
-  when: '"windows_exporter" not in prometheus_components'
-
 - name: Discover latest version of prometheus
   ansible.builtin.set_fact:
     prometheus_version: "{{ (lookup('url', 'https://api.github.com/repos/prometheus/prometheus/releases/latest', headers=_github_api_headers, split_lines=False) |
@@ -78,6 +74,10 @@
   when:
     - windowsexporter_version == "latest"
     - '"windows_exporter" in prometheus_components'
+
+- name: Set role facts
+  ansible.builtin.include_tasks: setup-facts.yml
+  when: '"windows_exporter" not in prometheus_components'
 
 - name: Install Node Exporter
   ansible.builtin.include_tasks: setup-nodeexporter.yml
