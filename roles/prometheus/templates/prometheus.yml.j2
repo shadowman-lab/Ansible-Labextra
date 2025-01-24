@@ -39,31 +39,37 @@ scrape_configs:
     scheme: https
     bearer_token: "{{ bearer_token }}"
     static_configs:
-    - targets: ['aap.shadowman.dev:443']
+    - targets: ['tower.shadowman.dev:443']
 
   # Scrape config for Controller Node Exporter
-  - job_name: 'aapcontroller1.shadowman.dev'
+  - job_name: 'tower1.shadowman.dev'
     scrape_interval: {{ tower_scrape }}
     static_configs:
-    - targets: ['aapcontroller1.shadowman.dev:9100']
+    - targets: ['tower1.shadowman.dev:9100']
 
   # Scrape config for Controller Node Exporter
-  - job_name: 'aapcontroller2.shadowman.dev'
+  - job_name: 'tower2.shadowman.dev'
     scrape_interval: {{ tower_scrape }}
     static_configs:
-    - targets: ['aapcontroller2.shadowman.dev:9100']
+    - targets: ['tower2.shadowman.dev:9100']
 
-  # Scrape job for aapen node exporter
-  - job_name: 'aapen.shadowman.dev'
+  # Scrape job for rhel8 node exporter
+  - job_name: 'rhel8.shadowman.dev'
     scrape_interval: {{ tower_scrape }}
     static_configs:
-    - targets: ['aapen.shadowman.dev:9100']
+    - targets: ['rhel8.shadowman.dev:9100']
 
   # Scrape job for windows exporter
   - job_name: 'win2016.ad.shadowman.dev'
     scrape_interval: {{ tower_scrape }}
     static_configs:
     - targets: ['win2016.ad.shadowman.dev:9100']
+
+  # Scrape job for POSTGRESQL exporter
+  - job_name: 'AAP POSTGRESQL Exporter Metrics'
+    scrape_interval: {{ tower_scrape }}
+    static_configs:
+    - targets: ['towerdb.shadowman.dev:9187']
 
 #  # The labels to add to any time series or alerts when communicating with
 #  # external systems (federation, remote storage, Alertmanager).
