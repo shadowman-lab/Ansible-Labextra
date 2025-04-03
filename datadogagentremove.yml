@@ -1,5 +1,5 @@
 - name: Uninstall Datadog Agent
-  hosts: all
+  hosts: "{{ vm_name | default('all') }}"
 
   roles:
     - datadog_remove
