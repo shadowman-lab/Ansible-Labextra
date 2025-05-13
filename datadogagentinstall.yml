@@ -5,6 +5,8 @@
   vars:
     datadog_agent_version: "7.64.1"
     datadog_config:
+      tags:
+        - "env:shadowman"
       hostname: "{{ ansible_fqdn }}"
       log_level: INFO
       inventories_configuration_enabled: true
