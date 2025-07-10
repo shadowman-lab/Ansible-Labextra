@@ -19,7 +19,7 @@ ExecStart=/usr/bin/podman container run \
         --env ALLOW_ANONYMOUS_LOGIN=yes \
         --network messaging \
         --publish 2181:2181 \
-        --detach=True bitnami/zookeeper
+        --detach=True docker.io/bitnami/zookeeper
 ExecStop=/usr/bin/podman stop \
         --ignore -t 10 \
         --cidfile=%t/%n.ctr-id

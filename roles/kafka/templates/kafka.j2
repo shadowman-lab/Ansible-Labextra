@@ -21,7 +21,7 @@ ExecStart=/usr/bin/podman container run \
         --env KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://{{ inventory_hostname }}:9092 \
         --network messaging \
         --publish 9092:9092 \
-        --detach=True bitnami/kafka
+        --detach=True docker.io/bitnami/kafka
 ExecStop=/usr/bin/podman stop \
         --ignore -t 10 \
         --cidfile=%t/%n.ctr-id
