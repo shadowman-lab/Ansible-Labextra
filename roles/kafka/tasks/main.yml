@@ -29,6 +29,13 @@
     name: messaging
     state: present
 
+- name: Pull kafka and zookeeper images
+  containers.podman.podman_image:
+    name: "{{ item }}"
+  loop:
+    - docker.io/bitnami/zookeeper
+    - docker.io/bitnami/kafka
+
 - name: Deploy Zookeeper Service file
   ansible.builtin.template:
     src: templates/zookeeper.j2
