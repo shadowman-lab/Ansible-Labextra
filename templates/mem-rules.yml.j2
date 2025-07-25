@@ -10,7 +10,7 @@ groups:
       summary: 'Host out of memory (instance: {% raw %}{{ $labels.job }}{% endraw %})'
       description: 'Node memory is filling up (< 10% left)  VALUE = {% raw %}{{ $value }}{% endraw %}'
   - alert: HostTooMuchMemory
-    expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 > 90
+    expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 > 95
     for: {{tower_scrape}}
     labels:
       severity: warning
