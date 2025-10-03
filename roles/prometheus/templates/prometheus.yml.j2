@@ -39,7 +39,7 @@ scrape_configs:
     scheme: https
     bearer_token: "{{ bearer_token }}"
     static_configs:
-    - targets: ['tower.shadowman.dev:443']
+    - targets: ['aap.shadowman.dev:443']
 
   # Scrape config for Controller Node Exporter
   - job_name: 'tower1.shadowman.dev'
