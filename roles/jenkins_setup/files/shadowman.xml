@@ -77,7 +77,7 @@ pipeline {
         stage('Controller- DevOps') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'jenkins_controller', passwordVariable: 'CONTROLLER_PASS', usernameVariable: 'CONTROLLER_USER')]) {
-                    sh 'curl -u ${CONTROLLER_USER}:${CONTROLLER_PASS} -i -H "Content-Type:application/json" https://tower.shadowman.dev/api/controller/v2/workflow_job_templates/602/launch/ --data "{}"'
+                    sh 'curl -u ${CONTROLLER_USER}:${CONTROLLER_PASS} -i -H "Content-Type:application/json" https://aap.shadowman.dev/api/controller/v2/workflow_job_templates/602/launch/ --data "{}"'
                 }
 
             }
