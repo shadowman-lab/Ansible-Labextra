@@ -24,7 +24,7 @@
         init_config:
         instances:
           - name: Website
-            url: https://{{ ansible_fqdn }}
+            url: https://{{ fqdn }}
 
   roles:
     - datadog.dd.agent
