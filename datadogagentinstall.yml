@@ -3,7 +3,7 @@
   gather_facts: false
 
   vars:
-    datadog_agent_version: "7.64.1"
+    datadog_agent_version: "7.72.0"
     datadog_config:
       tags:
         - "env:shadowman"
