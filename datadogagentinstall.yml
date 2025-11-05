@@ -7,7 +7,7 @@
     datadog_config:
       tags:
         - "env:shadowman"
-      hostname: "{{ ansible_fqdn }}"
+      hostname: "{{ fqdn }}"
       log_level: INFO
       inventories_configuration_enabled: true
       apm_config:
