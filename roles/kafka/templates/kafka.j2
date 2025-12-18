@@ -21,7 +21,6 @@ ExecStart=/usr/bin/podman container run \
         --env KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://{{ inventory_hostname }}:9092 \
         --env KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
         --env KAFKA_CFG_NODE_ID=0 \
-        --env KAFKA_CFG_PROCESS_ROLES=controller,broker \
         --network messaging \
         --publish 9092:9092 \
         --detach=True docker.io/bitnami/kafka
