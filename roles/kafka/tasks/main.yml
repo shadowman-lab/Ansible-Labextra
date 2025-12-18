@@ -3,7 +3,6 @@
   ansible.builtin.dnf:
     name:
       - podman
-      - podman-plugins
       - java
     state: present
 
