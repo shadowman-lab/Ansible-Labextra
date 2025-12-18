@@ -32,9 +32,9 @@
     firewall-cmd --runtime-to-permanent
     systemctl restart firewalld
 
-- name: Install OpenJDK 1.8.0
-  ansible.builtin.yum:
-    name: java-1.8.0-openjdk
+- name: Install OpenJDK 25
+  ansible.builtin.dnf:
+    name: java-25-openjdk
     state: present
 
 - name: Install elasticsearch
@@ -86,7 +86,7 @@
   delay: 2
 
 - name: Install kibana
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: kibana
     state: present
 
@@ -126,13 +126,8 @@
     enabled: true
     daemon_reload: true
 
-- name: Install OpenJDK 1.8.0
-  ansible.builtin.yum:
-    name: java-1.8.0-openjdk
-    state: present
-
 - name: Install logstash
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: logstash
     state: present
 
