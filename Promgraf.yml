@@ -26,7 +26,7 @@
 
   roles:
     - prometheus
-    # - lrk.grafana
+    - grafana
 
   collections:
     - ansible.posix
