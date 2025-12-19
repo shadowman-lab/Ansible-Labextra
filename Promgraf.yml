@@ -32,7 +32,7 @@
     - ansible.posix
 
   tasks:
-    - name: Open Firewalld for grafana
+    - name: Open Firewalld for prometheus
       ansible.posix.firewalld:
         port: 9090/tcp
         permanent: true
@@ -46,7 +46,7 @@
         state: enabled
       notify: restart_firewalld
 
-    - name: Open Firewalld for prometheus
+    - name: Open Firewalld for grafana
       ansible.posix.firewalld:
         port: 3000/tcp
         permanent: true
