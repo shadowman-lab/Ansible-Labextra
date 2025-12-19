@@ -46,6 +46,7 @@
         mode: "0755"
         owner: root
         group: root
+        remote_src: true
       with_items:
         - prometheus
         - promtool
@@ -59,6 +60,7 @@
         mode: "0644"
         owner: root
         group: root
+        remote_src: true
       with_items:
         - console_libraries
         - consoles
