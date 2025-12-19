@@ -41,7 +41,7 @@
 
     - name: Propagate official alertmanager and amtool binaries
       ansible.builtin.copy:
-        src: /tmp/alertmanager-{{ alertmanager_version }}.linux-{{ go_arch }}/{{ item }}
+        src: /tmp/alertmanager-{{ alertmanager_version }}.{{ prometheus_platform_suffix }}/{{ item }}
         dest: "{{ _alertmanager_binary_install_dir }}/{{ item }}"
         mode: "0755"
         owner: root

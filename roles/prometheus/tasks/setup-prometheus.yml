@@ -41,7 +41,7 @@
 
     - name: Propagate official prometheus and promtool binaries
       ansible.builtin.copy:
-        src: /tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch }}/{{ item }}
+        src: /tmp/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}/{{ item }}
         dest: "{{ _prometheus_binary_install_dir }}/{{ item }}"
         mode: "0755"
         owner: root
@@ -54,7 +54,7 @@
 
     - name: Propagate official console templates
       ansible.builtin.copy:
-        src: /tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch }}/{{ item }}/
+        src: /tmp/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}/{{ item }}/
         dest: "{{ prometheus_config_dir }}/{{ item }}/"
         mode: "0644"
         owner: root
