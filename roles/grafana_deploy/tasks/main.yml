@@ -2,7 +2,7 @@
 # tasks file for ansible-grafana
 
 - name: Include RHEL tasks
-  ansible.builtin.include_tasks "setup-{{ ansible_os_family }}.yml"
+  ansible.builtin.include_tasks: "setup-{{ ansible_os_family }}.yml"
 
 - name: "Ensure Grafana directories exists"
   ansible.builtin.file:
