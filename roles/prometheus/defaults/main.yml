@@ -12,6 +12,7 @@ prometheus_user: prometheus
 prometheus_path_install: /usr/local/bin/prometheustools
 # Prometheus configuration path
 prometheus_path_config: /etc/prometheus
+prometheus_config_dir: /etc/prometheus
 alertmanager_path_config: /etc/alertmanager
 # Prometheus logs path
 prometheus_path_log: /var/log/prometheus
