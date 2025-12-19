@@ -39,6 +39,13 @@
         state: enabled
       notify: restart_firewalld
 
+    - name: Open Firewalld for alertmanager
+      ansible.posix.firewalld:
+        port: 9093/tcp
+        permanent: true
+        state: enabled
+      notify: restart_firewalld
+
     - name: Open Firewalld for prometheus
       ansible.posix.firewalld:
         port: 3000/tcp
