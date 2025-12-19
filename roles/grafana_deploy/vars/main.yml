@@ -1,0 +1,4 @@
+---
+# vars file for ansible-grafana
+__grafana_yum_repository_url: https://packagecloud.io/grafana/stable/el/$releasever/$basearch
+__grafana_yum_repository_gpgkey: https://packagecloud.io/gpg.key https://grafanarel.s3.amazonaws.com/RPM-GPG-KEY-grafana

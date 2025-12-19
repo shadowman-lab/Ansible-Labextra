@@ -1,0 +1,34 @@
+---
+# tasks file for ansible-grafana
+
+- name: Include RHEL tasks
+  ansible.builtin.include_tasks "setup-{{ ansible_os_family }}.yml"
+
+- name: "Ensure Grafana directories exists"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ grafana_user }}"
+    group: "{{ grafana_group }}"
+  with_items:
+    - "{{ grafana_path_data }}"
+    - "{{ grafana_path_config }}"
+    - "{{ grafana_path_logs }}"
+
+- name: "Ensure Grafana config file is present"
+  ansible.builtin.template:
+    src: grafana.ini.j2
+    dest: "{{ grafana_path_config }}/grafana.ini"
+    owner: "{{ grafana_user }}"
+    group: "{{ grafana_group }}"
+  notify:
+    - "restart grafana"
+
+# - name: "Ensure Grafana ldap config file is present"
+#   template:
+#     src: ldap.toml.j2
+#     dest: "{{ grafana_path_config }}/ldap.toml.ini"
+#     owner: "{{ grafana_user }}"
+#     group: "{{ grafana_group }}"
+#   notify:
+#     - "restart grafana"

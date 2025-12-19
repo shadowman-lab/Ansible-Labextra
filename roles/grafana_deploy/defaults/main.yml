@@ -1,0 +1,11 @@
+---
+# defaults file for ansible-grafana
+
+grafana_user: grafana
+grafana_group: grafana
+
+grafana_service_name: grafana-server
+
+grafana_path_config: /etc/grafana
+grafana_path_logs: /var/log/grafana
+grafana_path_data: /var/lib/grafana

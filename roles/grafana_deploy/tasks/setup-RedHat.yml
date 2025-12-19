@@ -1,0 +1,22 @@
+---
+
+- name: "Ensure Grafana YUM Repository is present"
+  ansible.builtin.yum_repository:
+    name: "grafana"
+    description: "Grafana Repository"
+    baseurl: "{{ __grafana_yum_repository_url }}"
+    gpgcheck: yes
+    gpgkey: "{{ __grafana_yum_repository_gpgkey }}"
+
+- name: "Ensure Grafana package is installed"
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - grafana
+
+- name: "Ensure the Grafana service is enabled"
+  ansible.builtin.service:
+    name: "{{ grafana_service_name }}"
+    enabled: yes
+    state: started
