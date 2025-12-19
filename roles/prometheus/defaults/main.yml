@@ -74,7 +74,7 @@ alertmanager_version: "0.8.0"
 alertmanager_service_name: alertmanager
 
 # Alert manager template path
-alertmanager_path_templates: "{{ prometheus_path_config }}/templates"
+alertmanager_path_templates: "alertmanager/templates"
 # Alert manager data path
 alertmanager_path_data: /var/lib/alertmanager
 
