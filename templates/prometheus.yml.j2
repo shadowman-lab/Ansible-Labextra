@@ -53,11 +53,11 @@ scrape_configs:
     static_configs:
     - targets: ['aapcontroller2.shadowman.dev:9100']
 
-  # Scrape job for rhel8 node exporter
-  - job_name: 'rhel8.shadowman.dev'
+  # Scrape job for rhel10 node exporter
+  - job_name: 'rhel10.shadowman.dev'
     scrape_interval: {{ tower_scrape }}
     static_configs:
-    - targets: ['rhel8.shadowman.dev:9100']
+    - targets: ['rhel10.shadowman.dev:9100']
 
   # Scrape job for windows exporter
   - job_name: 'win2016.ad.shadowman.dev'
