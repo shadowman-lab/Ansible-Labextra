@@ -60,10 +60,10 @@ scrape_configs:
     - targets: ['rhel10.shadowman.dev:9100']
 
   # Scrape job for windows exporter
-  - job_name: 'win2016.ad.shadowman.dev'
+  - job_name: 'win2025.ad.shadowman.dev'
     scrape_interval: {{ tower_scrape }}
     static_configs:
-    - targets: ['win2016.ad.shadowman.dev:9100']
+    - targets: ['win2025.ad.shadowman.dev:9100']
 
   # Scrape job for POSTGRESQL exporter
   - job_name: 'AAP POSTGRESQL Exporter Metrics'
