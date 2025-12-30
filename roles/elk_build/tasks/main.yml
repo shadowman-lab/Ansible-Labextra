@@ -38,7 +38,7 @@
     state: present
 
 - name: Install elasticsearch
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: elasticsearch
     state: present
 
