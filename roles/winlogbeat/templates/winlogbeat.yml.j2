@@ -23,6 +23,9 @@ winlogbeat.event_logs:
   - name: Microsoft-Windows-PowerShell/Operational
     event_id: 4100, 4103, 4104, 4105, 4106
 
+  - name: Microsoft-Windows-Windows Firewall With Advanced Security/Firewall
+    level: information, warning, error
+
   - name: ForwardedEvents
     tags: [forwarded]
 
