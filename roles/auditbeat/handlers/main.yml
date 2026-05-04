@@ -7,4 +7,5 @@
 - name: Red Hat restart auditbeat
   ansible.builtin.service:
     name: auditbeat
+    enabled: true
     state: restarted
