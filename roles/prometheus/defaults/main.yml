@@ -43,7 +43,7 @@ prometheus_version: 1.7.1
 prometheus_service_name: prometheus
 
 # Address to bind on, default :9090
-prometheus_listen_port: 9090
+prometheus_listen_port: 9092
 prometheus_listen_address: :{{ prometheus_listen_port }}
 
 # Set the -web.external-url command line parameter. If defined, also set the -web.route-prefix command line parameter to /

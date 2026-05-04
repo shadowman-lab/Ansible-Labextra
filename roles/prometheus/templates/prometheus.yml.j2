@@ -30,7 +30,7 @@ scrape_configs:
   - job_name: 'prometheus'
     scheme: https
     static_configs:
-    - targets: ['{{ inventory_hostname }}:9090']
+    - targets: ['{{ inventory_hostname }}:9092']
 
   # Scrape Config for Controller
   - job_name: 'controller metrics'

@@ -11,6 +11,7 @@ RestartSec=10
 ExecStart={{ _prometheus_binary_install_dir }}/prometheus \
               --config.file={{ prometheus_path_config }}/prometheus.yml \
               --web.config.file={{ prometheus_path_config }}/web.yml \
+              --web.listen-address=0.0.0.0:{{ prometheus_listen_port }} \
 
 [Install]
 WantedBy=multi-user.target
